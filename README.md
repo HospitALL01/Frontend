@@ -8,6 +8,13 @@ From appointments to real-time alerts, everything stays in sync.
 The system includes an AI-powered chatbot to assist patients with queries, guidance, and support.  
 HospitALL keeps hospitals connected, efficient, and always ready.
 
+## 🛠️ Technologies Used 
+
+- **Backend:** Laravel (PHP Framework)
+- **Database:** phpMyAdmin (MySQL)
+- **Frontend:** React JS (JavaScript Library)
+- **Styling:** Tailwind CSS / Bootstrap
+
 ## Group Members
 
 **Members:**
@@ -20,10 +27,3 @@ HospitALL keeps hospitals connected, efficient, and always ready.
   [Mahir's WakaTime](https://wakatime.com/@amaterasu0001/projects/ckjzzgiklk?start=2025-07-25&end=2025-07-31)
 - **Ahmed Nafish Shiam (20220204075)**
   <!-- [Shiam's WakaTime](https://wakatime.com/) -->
-
-## 🛠️ Technologies Used 
-
-- **Backend:** Laravel (PHP Framework)
-- **Database:** phpMyAdmin (MySQL)
-- **Frontend:** React JS (JavaScript Library)
-- **Styling:** Tailwind CSS / Bootstrap
