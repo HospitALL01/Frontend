@@ -5,7 +5,7 @@
 HospitALL is a smart and unified healthcare management platform.  
 It brings together patient information, doctor coordination, and emergency response.  
 From appointments to real-time alerts, everything stays in sync.  
-The system ensures faster decisions and smarter operations.  
+The system includes an AI-powered chatbot to assist patients with queries, guidance, and support.  
 HospitALL keeps hospitals connected, efficient, and always ready.
 
 ## Group Members
