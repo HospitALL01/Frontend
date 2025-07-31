@@ -25,6 +25,7 @@ HospitALL keeps hospitals connected, efficient, and always ready.
 
 ### 🛠️ Technologies Used
 
+
 - **Backend:** Laravel (PHP Framework)
 - **Database:** phpMyAdmin (MySQL)
 - **Frontend:** React JS (JavaScript Library)
