@@ -21,11 +21,11 @@ HospitALL keeps hospitals connected, efficient, and always ready.
 - **Ahmed Nafish Shiam (20220204075)**
   <!-- [Shiam's WakaTime](https://wakatime.com/) -->
 
-  ### Key Features
+### Key Features
 
-  ### 🛠️ Technologies Used
+### 🛠️ Technologies Used
 
-  - **Backend:** Laravel (PHP Framework)
-  - **Database:** phpMyAdmin (MySQL)
-  - **Frontend:** React JS (JavaScript Library)
-  - **Styling:** Tailwind CSS / Bootstrap
+- **Backend:** Laravel (PHP Framework)
+- **Database:** phpMyAdmin (MySQL)
+- **Frontend:** React JS (JavaScript Library)
+- **Styling:** Tailwind CSS / Bootstrap
