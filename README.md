@@ -22,7 +22,7 @@ HospitALL keeps hospitals connected, efficient, and always ready.
   <!-- [Shiam's WakaTime](https://wakatime.com/) -->
 
 ### Key Features
-**
+___
 
 ### 🛠️ Technologies Used 
 - **Backend:** Laravel (PHP Framework)
