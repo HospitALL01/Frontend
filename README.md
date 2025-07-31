@@ -1,5 +1,14 @@
 # HospitALL
 
-## Group Members
+## Group Members/Collaborators
 
-[![wakatime](https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd.svg)](https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd)
+**Members:**
+
+- **Arany Hasan (20220204053)**
+  <!-- [Arany's WakaTime](https://wakatime.com/) -->
+- **Likhon Saha (20220204065)**
+  <!-- [Likhon's WakaTime](https://wakatime.com/) -->
+- **Mahir Faisal (20220204073)**
+  [Mahir's WakaTime] (https://wakatime.com/@amaterasu0001/projects/ckjzzgiklk?start=2025-07-25&end=2025-07-31)
+- **Ahmed Nafish Shiam (20220204075)**
+  <!-- [Shiam's WakaTime](https://wakatime.com/) -->
