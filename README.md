@@ -1,7 +1,7 @@
 # HospitALL
 
 ## Group Members
-- **Arany Hasan (20220204053)**
+- **Arany Hasan (20220204053)**  
  <a href="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c"><img src="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c.svg" alt="wakatime"></a>
 
 
