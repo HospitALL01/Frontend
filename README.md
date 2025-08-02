@@ -30,4 +30,7 @@ HospitALL keeps hospitals connected, efficient, and always ready.
 
   Figma Prototype - https://peach-lens-51212450.figma.site/
 
+## Project Features
+AI Diagnosis: Users can enter their symptoms to receive an AI-generated list of potential diseases and get recommendations for relevant doctors or tests.
+
 
