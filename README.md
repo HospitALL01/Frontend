@@ -1,7 +1,7 @@
 # HospitALL
 
 ## Group Members
-*Members:*
+**Members:**
 
 - **Arany Hasan (20220204053)**
   <!-- [Arany's WakaTime](https://wakatime.com/) -->
