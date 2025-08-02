@@ -1,19 +1,20 @@
 # HospitALL
 
 ## Group Members
-- **Arany Hasan (20220204053)**  
- <a href="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c"><img src="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c.svg" alt="wakatime"></a>
 
+- **Arany Hasan (20220204053)**
+  <!-- [Arany's WakaTime](https://wakatime.com/) -->
 
 - **Likhon Saha (20220204065)**  
- <a href="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c"><img src="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c.svg" alt="wakatime"></a>  
+  <a href="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c"><img src="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c.svg" alt="wakatime"></a>
 
 - **Mahir Faisal (20220204073)**  
   <a href="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd"><img src="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd.svg" alt="wakatime"></a>
-- **Ahmed Nafish Shiam (20220204075)**
-  <!-- [Shiam's WakaTime](https://wakatime.com/) -->
+- **Ahmed Nafish Shiam (20220204075)**  
+  <a href="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/bfa9fe9a-246b-4cd3-96c9-2531d551ad23"><img src="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/bfa9fe9a-246b-4cd3-96c9-2531d551ad23.svg" alt="wakatime"></a>
 
 ## Project Description
+
 HospitALL is a smart and unified healthcare management platform.  
 It brings together patient information, doctor coordination, and emergency response.  
 From appointments to real-time alerts, everything stays in sync.  
@@ -21,15 +22,16 @@ The system includes an AI-powered chatbot to assist patients with queries, guida
 HospitALL keeps hospitals connected, efficient, and always ready.
 
 ## Target Audience
-This platform includes patients seeking medical services, 
-doctors managing their professional details, hospitals handling their facilities and emergency services, 
-and administrators overseeing the entire system. Essentially, the project is designed for anyone involved in the healthcare ecosystem, 
-from the individual seeking care to the institutions providing it.
+
+This platform serves as a comprehensive ecosystem connecting patients, healthcare providers, and administrators. It enables patients to access medical services, allows doctors to manage their professional profiles, empowers hospitals to oversee facilities and emergency services, and provides administrators with tools to efficiently manage the entire system. In essence, the project integrates all stakeholders within the healthcare landscape, from individuals seeking care to the institutions delivering it.
 
 ## Core Features (AI-Powered)
-The AI feature is a core component of the platform that helps users define potential diseases. A user enters a detailed description of their symptoms as an Input Query. The AI then processes this information to generate a diagnostic AI Response that includes a list of possible diseases. Crucially, the platform then provides a dynamic list of recommended doctors and tests based on these results, guiding the user toward appropriate medical consultation.
+
+Our platform features an intelligent AI diagnostic engine designed to assist users in identifying potential health conditions. Users begin by submitting a detailed description of their symptoms through an Input Query. The AI analyzes this information and returns a comprehensive AI Response that includes a curated list of possible conditions.
+Beyond diagnostics, the system takes actionable next steps by generating a personalized, dynamic list of recommended doctors and diagnostic tests, helping users move seamlessly from symptom awareness to professional medical care
 
 ## Project Features
+
 - AI symptom checker gives disease recommendations
 - Find doctors by specialty and browse nearby hospital services.
 - Book and manage appointments with doctors directly on the platform.
@@ -45,14 +47,8 @@ The AI feature is a core component of the platform that helps users define poten
 - **Styling:** Tailwind CSS / Bootstrap
 
 ## Mock UI Design
- We have designed the interface using Figma to visualize the layout and interaction flow of our
- application.
 
-  Figma Prototype - https://peach-lens-51212450.figma.site/
+We have designed the interface using Figma to visualize the layout and interaction flow of our
+application.
 
-
-
-
-
-
-
+Figma Prototype - https://peach-lens-51212450.figma.site/
