@@ -23,6 +23,9 @@ doctors managing their professional details, hospitals handling their facilities
 and administrators overseeing the entire system. Essentially, the project is designed for anyone involved in the healthcare ecosystem, 
 from the individual seeking care to the institutions providing it.
 
+## Core Features (AI-Powered)
+The AI feature is a core component of the platform that helps users define potential diseases. A user enters a detailed description of their symptoms as an Input Query. The AI then processes this information to generate a diagnostic AI Response that includes a list of possible diseases. Crucially, the platform then provides a dynamic list of recommended doctors and tests based on these results, guiding the user toward appropriate medical consultation.
+
 ## Project Features
 - AI symptom checker gives disease recommendations
 - Find doctors by specialty and browse nearby hospital services.
