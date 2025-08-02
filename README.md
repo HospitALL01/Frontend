@@ -23,7 +23,15 @@ doctors managing their professional details, hospitals handling their facilities
 and administrators overseeing the entire system. Essentially, the project is designed for anyone involved in the healthcare ecosystem, 
 from the individual seeking care to the institutions providing it.
 
-## Technologies Used 
+## Project Features
+- AI symptom checker gives disease recommendations
+- Find doctors by specialty and browse nearby hospital services.
+- Book and manage appointments with doctors directly on the platform.
+- Read and write reviews to choose the right healthcare provider.
+- Request ambulance service from nearby hospitals for urgent situations.
+- Manage personal and professional profiles for patients and doctors.
+
+## Technology Stack
 
 - **Backend:** Laravel (PHP Framework)
 - **Database:** phpMyAdmin (MySQL)
@@ -36,12 +44,6 @@ from the individual seeking care to the institutions providing it.
 
   Figma Prototype - https://peach-lens-51212450.figma.site/
 
-## Project Features
-- AI symptom checker gives disease recommendations
-- Find doctors by specialty and browse nearby hospital services.
-- Book and manage appointments with doctors directly on the platform.
-- Read and write reviews to choose the right healthcare provider.
-- Request ambulance service from nearby hospitals for urgent situations.
-- Manage personal and professional profiles for patients and doctors.
+
 
 
