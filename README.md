@@ -2,8 +2,7 @@
 
 ## Group Members
 - **Arany Hasan (20220204053)**
-  https://wakatime.com/@2ad53666-4746-4971-a4a1-c07bf36819a7/projects/ubmvwomgxz?start=2025-07-27&end=2025-08-02
-  <!-- [Arany's WakaTime](https://wakatime.com/) -->
+  <a href="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c"><img src="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/93771d3a-5bbd-45b4-8ad1-3c64215ed23c.svg" alt="wakatime"></a>
 
 - **Likhon Saha (20220204065)**  
  <a href="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c"><img src="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c.svg" alt="wakatime"></a>  
