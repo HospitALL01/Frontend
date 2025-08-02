@@ -4,6 +4,7 @@
 - **Arany Hasan (20220204053)**
   <!-- [Arany's WakaTime](https://wakatime.com/) -->
 - **Likhon Saha (20220204065)**
+  [![wakatime](https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/7df10197-455b-4bbc-923c-ae6a4875dd5f.svg)](https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/7df10197-455b-4bbc-923c-ae6a4875dd5f)
 - **Mahir Faisal (20220204073)**  
   <a href="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd"><img src="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/4a34596e-d6f6-45af-97e2-5ad3da2c33fd.svg" alt="wakatime"></a>
 - **Ahmed Nafish Shiam (20220204075)**
