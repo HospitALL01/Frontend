@@ -17,6 +17,12 @@ From appointments to real-time alerts, everything stays in sync.
 The system includes an AI-powered chatbot to assist patients with queries, guidance, and support.  
 HospitALL keeps hospitals connected, efficient, and always ready.
 
+## Target Audience
+This platform includes patients seeking medical services, 
+doctors managing their professional details, hospitals handling their facilities and emergency services, 
+and administrators overseeing the entire system. Essentially, the project is designed for anyone involved in the healthcare ecosystem, 
+from the individual seeking care to the institutions providing it.
+
 ## Technologies Used 
 
 - **Backend:** Laravel (PHP Framework)
