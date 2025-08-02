@@ -1,7 +1,6 @@
 # HospitALL
 
 ## Group Members
-
 **Members:**
 
 - **Arany Hasan (20220204053)**
