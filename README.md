@@ -1,7 +1,6 @@
 # HospitALL
 
 ## Group Members
-
 - **Arany Hasan (20220204053)**
   <!-- [Arany's WakaTime](https://wakatime.com/) -->
 - **Likhon Saha (20220204065)**
