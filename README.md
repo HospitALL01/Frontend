@@ -51,4 +51,4 @@ Beyond diagnostics, the system takes actionable next steps by generating a perso
 We have designed the interface using Figma to visualize the layout and interaction flow of our
 application.
 
-Figma Prototype - https://peach-lens-51212450.figma.site/
+Figma Prototype - [https://peach-lens-51212450.figma.site/](https://www.figma.com/make/M6lQqJucpCSkw2tkQ8z2UF/HospitALL--Community-?node-id=0-1&p=f&fullscreen=1)
