@@ -1,15 +1,13 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./AllPages/Home";
+import React from "react";
+import Navbar from './Components/Navbar.jsx';
+import Home from "./AllPages/Home.jsx";
 
 function App() {
   return (
-    <Routes>
-      {/* Default route */}
-      <Route path='/' element={<Home />} />
-
-      {/* Fallback route for wrong URLs */}
-      <Route path='*' element={<h1>404 - Page Not Found</h1>} />
-    </Routes>
+    <div>
+      <Navbar />
+      <Home />
+    </div>
   );
 }
 
