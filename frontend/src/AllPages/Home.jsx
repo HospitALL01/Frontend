@@ -27,7 +27,7 @@ function Home() {
           <div className='d-flex gap-4 mt-4 text-muted flex-wrap'>
             <span>✅ 500+ Doctors</span>
             <span>🏥 50+ Hospitals</span>
-            <span>🤖 AI-Powered Chatbot</span>
+            <span>🤖 AI-Powered Chatbott</span>
           </div>
         </div>
 
