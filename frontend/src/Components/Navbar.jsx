@@ -1,8 +1,10 @@
 import React from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
   return (
     <nav className='navbar navbar-expand-lg bg-white shadow-sm px-4'>
       {/* Logo */}
@@ -20,28 +22,38 @@ function Navbar() {
       <div className='collapse navbar-collapse' id='navbarNav'>
         <ul className='navbar-nav mx-auto'>
           <li className='nav-item mx-2'>
-            <a className='nav-link active text-primary' href='#'>Home</a>
+            <a className='nav-link active text-primary' href='#'>
+              Home
+            </a>
           </li>
           <li className='nav-item mx-2'>
-            <a className='nav-link' href='#'>Find Doctors</a>
+            <a className='nav-link' href='#'>
+              Find Doctors
+            </a>
           </li>
           <li className='nav-item mx-2'>
-            <a className='nav-link' href='#'>Hospitals</a>
+            <a className='nav-link' href='#'>
+              Hospitals
+            </a>
           </li>
           <li className='nav-item mx-2'>
-            <a className='nav-link' href='#'>AI Chatbot</a>
+            <a className='nav-link' href='#'>
+              AI Chatbot
+            </a>
           </li>
           <li className='nav-item mx-2'>
-            <a className='nav-link' href='#'>Emergency</a>
+            <a className='nav-link' href='#'>
+              Emergency
+            </a>
           </li>
         </ul>
 
         {/* Right Side Buttons */}
         <div className='d-flex'>
-          <button className='btn btn-outline-dark me-2 d-flex align-items-center'>
+          <button onClick={() => navigate("/login")} className='btn btn-outline-dark me-2 d-flex align-items-center'>
             <FaUser className='me-1' /> Login
           </button>
-          <button className='btn btn-primary d-flex align-items-center'>
+          <button onClick={() => navigate("/signup")} className='btn btn-primary d-flex align-items-center'>
             <FaUser className='me-1' /> Sign Up
           </button>
         </div>
