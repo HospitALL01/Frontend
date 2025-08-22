@@ -1,1 +1,58 @@
-/* @import "tailwindcss"; */
+/* ------------------Navbar------------------------ */
+.nav-link-custom {
+  position: relative;
+  color: #333 !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link-custom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #0d6efd;
+  transition: width 0.3s ease;
+}
+
+.nav-link-custom:hover {
+  transform: translateY(-3px);
+  color: #0d6efd !important;
+}
+
+.nav-link-custom:hover::after {
+  width: 100%;
+}
+/* -------------------------------------------------- */
+
+/* -----------------------Home Page 6 Section--------------------- */
+/* Hover effect for feature cards */
+.feature-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Line appearing at bottom on hover */
+.feature-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 0;
+  height: 3px;
+  background-color: #fd0d0d; /* Bootstrap primary */
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.feature-card:hover::after {
+  width: calc(100% - 40px);
+}
+/* -------------------------------------------------------------- */
