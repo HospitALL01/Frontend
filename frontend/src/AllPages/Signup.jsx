@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [role, setRole] = useState("Patient");
   const [fullname, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ export default function Register() {
       .then((res) => res.json())
       .then((result) => {
         console.log(result);
-        navigate('/login');
+        navigate("/login");
       });
   };
 
