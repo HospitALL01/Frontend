@@ -80,7 +80,7 @@ export default function AI({ user }) {
 
   return (
     <div className='container py-4 position-relative'>
-      {/* --- Login guard: Home.jsx এর overlay/blur এর মতোই --- */}
+      {/* --- Blur Section --- */}
       {!user && (
         <div
           className='position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center'
