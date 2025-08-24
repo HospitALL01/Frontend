@@ -32,13 +32,11 @@ function App() {
       <Navbar user={user} onLogout={handleLogout} />
 
       <Routes>
-        <Route path="/" element={<Home user={user} />} />
-        <Route path="/home" element={<Home user={user} />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/signup" element={<Signup />} />
-
-        {/* NEW: AI Chatbot route */}
-        <Route path="/ai" element={<AI user={user} />} />
+        <Route path='/' element={<Home user={user} />} />
+        <Route path='/home' element={<Home user={user} />} />
+        <Route path='/login' element={<Login setUser={setUser} />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/ai' element={<AI user={user} />} />
       </Routes>
     </div>
   );
