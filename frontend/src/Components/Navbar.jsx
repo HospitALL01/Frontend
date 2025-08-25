@@ -34,7 +34,7 @@ function Navbar({ user, onLogout }) {
           <li className="nav-item mx-2">
             <button
               className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/home")} //comment
             >
               Home
             </button>
