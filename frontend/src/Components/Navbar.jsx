@@ -1,22 +1,24 @@
 import React from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+// 1. Import NavLink for proper navigation
+import { NavLink, Link } from "react-router-dom";
 import "../index.css"; // 👈 Custom CSS import
 
 function Navbar({ user, onLogout }) {
-  const navigate = useNavigate();
+  // We don't need useNavigate for the links anymore, but we can keep it for the buttons if needed.
+  // For this setup, Link/NavLink is cleaner.
 
   return (
     <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4">
-      {/* Logo */}
-      <button
+      {/* Logo - Use Link for navigation */}
+      <Link
         className="navbar-brand fw-bold text-primary d-flex align-items-center btn btn-link p-0"
-        onClick={() => navigate("/home")}
+        to="/home"
       >
         <FaHeart className="me-2 text-primary" />
         HospitALL
-      </button>
+      </Link>
 
       {/* Mobile toggle */}
       <button
@@ -32,66 +34,53 @@ function Navbar({ user, onLogout }) {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav mx-auto">
           <li className="nav-item mx-2">
-            <button
-              className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/home")} //comment
-            >
+            <NavLink className="nav-link nav-link-custom" to="/home">
               Home
-            </button>
+            </NavLink>
           </li>
           <li className="nav-item mx-2">
-            <button
-              className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/doctors")}
-            >
+            {/* 2. ✅ CORRECTED: Changed path from "/doctors" to "/find-doctors" and used NavLink */}
+            <NavLink className="nav-link nav-link-custom" to="/find-doctors">
               Find Doctors
-            </button>
+            </NavLink>
           </li>
           <li className="nav-item mx-2">
-            <button
-              className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/hospitals")}
-            >
+            <NavLink className="nav-link nav-link-custom" to="/hospitals">
               Hospitals
-            </button>
+            </NavLink>
           </li>
           <li className="nav-item mx-2">
-            {/* ✅ navigate to /ai */}
-            <button
-              className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/ai")}
-            >
+            <NavLink className="nav-link nav-link-custom" to="/ai">
               AI Chatbot
-            </button>
+            </NavLink>
           </li>
           <li className="nav-item mx-2">
-            <button
-              className="nav-link btn btn-link nav-link-custom"
-              onClick={() => navigate("/emergency")}
-            >
+            <NavLink className="nav-link nav-link-custom" to="/emergency">
               Emergency
-            </button>
+            </NavLink>
           </li>
         </ul>
 
         {/* Right Side Buttons */}
-        <div className="d-flex">
+        <div className="d-flex align-items-center">
           {!user ? (
             <>
-              <button
-                onClick={() => navigate("/login")}
+              {/* Use Link for login/signup as they are navigation actions */}
+              <Link
+                to="/login"
                 className="btn btn-outline-dark btn-sm me-2 d-flex align-items-center"
               >
                 <FaUser className="me-1" /> Login
-              </button>
-              <button
-                onClick={() => navigate("/signup")}
+              </Link>
+              <Link
+                to="/signup"
                 className="btn btn-primary btn-sm d-flex align-items-center"
               >
                 <FaUser className="me-1" /> Sign Up
-              </button>
+              </Link>
             </>
           ) : (
+            // Logout is an action, so a <button> is correct here
             <button
               onClick={onLogout}
               className="btn btn-danger btn-sm d-flex align-items-center"
