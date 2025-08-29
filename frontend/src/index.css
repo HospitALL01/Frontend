@@ -1,4 +1,12 @@
-/* ------------------Navbar------------------------ */
+/* General Body Styles (Good Practice) */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+}
+
+/* ------------------ Navbar ------------------------ */
 .nav-link-custom {
   position: relative;
   color: #333 !important;
@@ -13,7 +21,7 @@
   bottom: -4px;
   width: 0;
   height: 2px;
-  background-color: #0d6efd;
+  background-color: #0d6efd; /* Bootstrap Primary */
   transition: width 0.3s ease;
 }
 
@@ -25,21 +33,19 @@
 .nav-link-custom:hover::after {
   width: 100%;
 }
-/* -------------------------------------------------- */
 
-/* -----------------------Home Page 6 Section--------------------- */
-/* Hover effect for feature cards */
+/* ----------------------- Home Page Feature Section --------------------- */
 .feature-card {
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px !important;
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Line appearing at bottom on hover */
 .feature-card::after {
   content: "";
   position: absolute;
@@ -47,7 +53,7 @@
   left: 20px;
   width: 0;
   height: 3px;
-  background-color: #fd0d0d; /* Bootstrap primary */
+  background-color: #0d6efd; /* Bootstrap Primary */
   transition: width 0.3s ease;
   border-radius: 2px;
 }
@@ -55,4 +61,302 @@
 .feature-card:hover::after {
   width: calc(100% - 40px);
 }
-/* -------------------------------------------------------------- */
+
+/* ----------------------- AI Chat Page Styles --------------------- */
+.chat-bubble {
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  font-size: 0.95rem;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+.chat-user {
+  background: #0d6efd; /* Bootstrap primary */
+  color: #fff;
+  border-bottom-right-radius: 4px; /* Gives it a "tail" */
+}
+
+.chat-bot {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  color: #343a40;
+  border-bottom-left-radius: 4px; /* Gives it a "tail" */
+}
+
+/* --- Doctor Appointment Booking Page Styles --- */
+.doctor-card {
+  border-radius: 16px !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.doctor-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.doctor-img-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+}
+
+/* This is the SVG icon inside the placeholder */
+.doctor-img-placeholder svg {
+  width: 50px;
+  height: 50px;
+}
+
+.verified-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 50px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.bg-success-soft {
+  background-color: rgba(25, 135, 84, 0.1);
+}
+
+.info-section {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.availability-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  border: 1px solid #eee;
+}
+/* --- Doctor Profile Page Styles --- */
+.doctor-profile-card,
+.profile-section-card {
+  border-radius: 16px !important;
+}
+
+.profile-section-card .review-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+/* --- Calendar Component Styles --- */
+.calendar {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 5px;
+}
+
+.calendar-grid.days {
+  font-weight: bold;
+  color: #888;
+  font-size: 0.8rem;
+  padding-bottom: 5px;
+}
+
+.calendar-grid .day {
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.calendar-grid .day:hover {
+  background-color: #f0f0f0;
+}
+
+.calendar-grid .day.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.calendar-grid .day.today {
+  font-weight: bold;
+  border: 1px solid #0d6efd;
+}
+
+.calendar-grid .day.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* --- Time Slot Styles --- */
+.time-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.time-slot {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+
+.time-slot.selected {
+  background-color: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+/* --- Booking Page & Payment Styles --- */
+.payment-logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.payment-logo-text:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.payment-logo-text.bkash {
+  color: #d82a77;
+}
+.payment-logo-text.nagad {
+  color: #f47920;
+}
+.payment-logo-text.rocket {
+  color: #8a246d;
+}
+/* --- Emergency Page Styles --- */
+.emergency-page-bg {
+  background-color: #fff5f5; /* Light pink background */
+}
+
+.btn-call-911 {
+  font-size: 1.1rem;
+  padding: 10px 30px;
+  border-radius: 50px;
+}
+
+.emergency-type-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #333;
+  font-weight: 500;
+}
+.emergency-type-btn:hover {
+  background-color: #e9ecef;
+}
+.emergency-type-btn.active {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+.emergency-type-btn svg {
+  margin-right: 12px;
+}
+
+.location-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.ambulance-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.ambulance-status {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+}
+.ambulance-status.available {
+  background-color: #198754; /* Green */
+}
+.ambulance-status.busy {
+  background-color: #6c757d; /* Gray */
+}
+
+.request-ambulance-btn:disabled {
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+  cursor: not-allowed;
+}
+
+.tips-box {
+  background-color: #e7f1ff; /* Light blue */
+  border: 1px solid #bde0fe;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.contact-card {
+  text-align: center;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.contact-card .icon-wrapper {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+/* Helper classes for soft colors */
+.bg-danger-soft { background-color: #ffe3e3; }
+.bg-primary-soft { background-color: #e7f1ff; }
+.bg-success-soft { background-color: #d1e7dd; }
+/* --- Google Map Container Styles (NEW) --- */
+.map-container {
+  width: 100%;
+  height: 200px; /* You can adjust the height */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}

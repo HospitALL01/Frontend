@@ -1,17 +1,4 @@
 #root {
   margin: 0 auto;
 }
-.chat-bubble {
-  border-radius: 14px;
-  padding: 10px 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  font-size: 0.95rem;
-}
-.chat-user {
-  background: #0d6efd; /* Bootstrap primary */
-  color: #fff;
-}
-.chat-bot {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
+
