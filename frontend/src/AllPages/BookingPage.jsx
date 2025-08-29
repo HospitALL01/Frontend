@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUserMd, FaCalendarAlt, FaClock, FaCreditCard } from "react-icons/fa";
 import { format } from "date-fns";
-import "../index.css"; 
+import "../index.css";
 
 // --- Payment Method Logos (Placeholders) ---
 // In a real app, you would use actual SVG or image files for these.
@@ -17,6 +17,7 @@ export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("mobile");
+  //hi i am arany
 
   // Destructure booking details from the state passed during navigation
   const { doctor, date, time } = state || {};
