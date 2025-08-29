@@ -7,20 +7,35 @@ export default function Register() {
   const [fullname, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [warning, setWarning] = useState(""); // For showing warning message
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Register:", { fullname, email, role, password });
 
-    fetch("http://127.0.0.1:8000/api/register", {
+    // Send a request to check if the email exists
+    fetch("http://127.0.0.1:8000/api/check-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullname, email, password, role }),
+      body: JSON.stringify({ email }),
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-        navigate("/login");
+        if (result.exists) {
+          setWarning("This email is already registered!"); // Show warning if email exists
+        } else {
+          // Proceed with the registration if email doesn't exist
+          fetch("http://127.0.0.1:8000/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fullname, email, password, role }),
+          })
+            .then((res) => res.json())
+            .then((result) => {
+              console.log(result);
+              navigate("/login");
+            });
+        }
       });
   };
 
@@ -40,6 +55,9 @@ export default function Register() {
         {/* Title */}
         <h5 className='text-center fw-bold'>Create Account</h5>
         <p className='text-center text-muted mb-4'>Join our healthcare platform</p>
+
+        {/* Warning Message */}
+        {warning && <p className='text-danger text-center'>{warning}</p>}
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
