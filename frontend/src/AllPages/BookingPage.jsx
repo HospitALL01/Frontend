@@ -17,14 +17,24 @@ import {
 } from "date-fns";
 import "../index.css";
 
-// --- Payment Method Logos (unchanged) ---
-const BkashLogo = () => <span className="payment-logo-text bkash">bKash</span>;
-const NagadLogo = () => <span className="payment-logo-text nagad">Nagad</span>;
+// ✅ 1. CREATE COMPONENTS FOR BANGLADESHI PAYMENT METHOD LOGOS
+const BkashLogo = () => (
+  <div className="payment-logo-wrapper">
+    <span className="payment-logo-text bkash">bKash</span>
+  </div>
+);
+const NagadLogo = () => (
+  <div className="payment-logo-wrapper">
+    <span className="payment-logo-text nagad">Nagad</span>
+  </div>
+);
 const RocketLogo = () => (
-  <span className="payment-logo-text rocket">Rocket</span>
+  <div className="payment-logo-wrapper">
+    <span className="payment-logo-text rocket">Rocket</span>
+  </div>
 );
 
-// ✅ 1. ADD CALENDAR COMPONENT (Moved from DoctorProfile)
+// Calendar Component (This is unchanged)
 const Calendar = ({ selectedDate, setSelectedDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const renderHeader = () => (
@@ -88,7 +98,6 @@ export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // ✅ 2. ADD STATE FOR DATE AND TIME SELECTION
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [activeTab, setActiveTab] = useState("mobile");
@@ -112,7 +121,7 @@ export default function BookingPage() {
     );
   }
 
-  const serviceFee = 25;
+  const serviceFee = 25; // Example service fee in BDT
   const totalAmount = doctor.consultationFee + serviceFee;
 
   const handlePayment = () => {
@@ -128,14 +137,22 @@ export default function BookingPage() {
   return (
     <div className="container py-5">
       <div className="row g-5">
-        {/* ✅ 3. MODIFIED: Left Column is now for Booking Actions */}
+        {/* Left Column for Booking Actions */}
         <div className="col-lg-7">
           <h2 className="fw-bold mb-4">Book Your Appointment</h2>
-          {/* Appointment Details */}
           <div className="card shadow-sm border-0 mb-4">
             <div className="card-body p-4 d-flex align-items-center">
               <div className="doctor-img-placeholder me-3">
-                {/* SVG placeholder */}
+                <svg
+                  width="60"
+                  height="60"
+                  viewBox="0 0 100 100"
+                  fill="#e9ecef"
+                >
+                  <path d="M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z" />
+                  <path d="M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z" />
+                  <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
+                </svg>
               </div>
               <div>
                 <h5 className="mb-0">{doctor.name}</h5>
@@ -143,7 +160,6 @@ export default function BookingPage() {
               </div>
             </div>
           </div>
-          {/* Calendar and Time Slots */}
           <div className="card shadow-sm border-0">
             <div className="card-body p-4">
               <label className="form-label fw-semibold">Select Date</label>
@@ -171,7 +187,7 @@ export default function BookingPage() {
           </div>
         </div>
 
-        {/* ✅ 4. MODIFIED: Right Column is for Summary & Payment */}
+        {/* Right Column for Summary & Payment */}
         <div className="col-lg-5">
           <h2 className="fw-bold mb-4">Summary & Payment</h2>
           <div className="card shadow-sm border-0">
@@ -209,12 +225,81 @@ export default function BookingPage() {
                   <p>৳{totalAmount}</p>
                 </div>
               </div>
-              {/* Payment Methods */}
+
+              {/* ✅ 2. MODIFIED: Payment Methods Section */}
               <h5 className="fw-semibold">Choose Payment Method</h5>
               <ul className="nav nav-pills nav-fill mb-4">
-                {/* Tabs for payment */}
+                <li className="nav-item">
+                  <button
+                    className={`nav-link ${
+                      activeTab === "mobile" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("mobile")}
+                  >
+                    Mobile Banking
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className={`nav-link ${
+                      activeTab === "card" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("card")}
+                  >
+                    Card / Other
+                  </button>
+                </li>
               </ul>
-              <div>{/* Payment tab content */}</div>
+
+              <div>
+                {activeTab === "mobile" && (
+                  <div>
+                    <p className="text-center text-muted">
+                      Select a provider to continue:
+                    </p>
+                    <div className="d-flex justify-content-center flex-wrap gap-3 mb-4">
+                      <BkashLogo />
+                      <NagadLogo />
+                      <RocketLogo />
+                    </div>
+                    <p className="small text-center text-muted">
+                      You will be redirected to the provider's secure payment
+                      gateway to complete the transaction.
+                    </p>
+                  </div>
+                )}
+                {activeTab === "card" && (
+                  <div>
+                    <div className="mb-3">
+                      <label className="form-label">Card Number</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="0000 0000 0000 0000"
+                      />
+                    </div>
+                    <div className="row">
+                      <div className="col-7">
+                        <label className="form-label">Expiry Date</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="MM / YY"
+                        />
+                      </div>
+                      <div className="col-5">
+                        <label className="form-label">CVC</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="123"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="d-grid mt-4">
                 <button
                   className="btn btn-primary btn-lg"

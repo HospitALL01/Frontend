@@ -370,3 +370,37 @@ body {
 .star-rating .star.active {
   color: #ffc107; /* Bootstrap's warning/yellow color */
 }
+/* --- Bangladeshi Payment Method Styles (NEW) --- */
+.payment-logo-wrapper {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.payment-logo-wrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: #0d6efd;
+}
+
+.payment-logo-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: bold;
+  height: 60px;
+  width: 120px;
+  border-radius: 4px;
+}
+
+.payment-logo-text.bkash {
+  color: #d82a77;
+}
+.payment-logo-text.nagad {
+  color: #f47920;
+}
+.payment-logo-text.rocket {
+  color: #8a246d;
+}
