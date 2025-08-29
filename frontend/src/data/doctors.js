@@ -38,14 +38,7 @@ export const doctors = [
         date: "1 month ago",
       },
     ],
-    availableTimes: [
-      "09:00 AM",
-      "09:30 AM",
-      "10:00 AM",
-      "10:30 AM",
-      "02:00 PM",
-      "02:30 PM",
-    ],
+    availableTimes: ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "02:00 PM", "02:30 PM"],
   },
   {
     id: 2,
@@ -76,14 +69,7 @@ export const doctors = [
         date: "3 weeks ago",
       },
     ],
-    availableTimes: [
-      "11:00 AM",
-      "11:30 AM",
-      "03:00 PM",
-      "03:30 PM",
-      "04:00 PM",
-      "04:30 PM",
-    ],
+    availableTimes: ["11:00 AM", "11:30 AM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"],
   },
   {
     id: 3,
@@ -120,14 +106,6 @@ export const doctors = [
         date: "2 months ago",
       },
     ],
-    availableTimes: [
-      "09:00 AM",
-      "10:00 AM",
-      "11:00 AM",
-      "02:00 PM",
-      "03:00 PM",
-    ],
+    availableTimes: ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM"],
   },
 ];
-//hinjenfnnnjnjnijnnnnhnjnnjnjhnjjnnjhnjuhnuhhbuhj
-//hi ami jani 
