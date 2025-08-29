@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-// ✅ 1. Import 'useNavigate' along with 'useParams'
+import React, { useState } from "react"; // ✅ THIS LINE IS NOW FIXED
 import { useParams, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -7,131 +6,57 @@ import {
   FaMapMarkerAlt,
   FaBriefcase,
   FaGraduationCap,
-  FaPhone,
-  FaEnvelope,
 } from "react-icons/fa";
-import {
-  format,
-  addMonths,
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-  isSameMonth,
-  isToday,
-  getDate,
-} from "date-fns";
 import "../index.css";
 import { doctors } from "../data/doctors";
 
-// --- Calendar Component (This section is unchanged) ---
-const Calendar = ({ selectedDate, setSelectedDate }) => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-
-  const renderHeader = () => (
-    <div className="calendar-header">
-      <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
-        &lt;
-      </button>
-      <span>{format(currentMonth, "MMMM yyyy")}</span>
-      <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
-        &gt;
-      </button>
-    </div>
-  );
-
-  const renderDays = () => {
-    const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-    return (
-      <div className="calendar-grid days">
-        {days.map((day) => (
-          <div key={day}>{day}</div>
-        ))}
-      </div>
-    );
-  };
-
-  const renderCells = () => {
-    const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
-    const days = eachDayOfInterval({ start: startDate, end: endDate });
-
-    return (
-      <div className="calendar-grid">
-        {days.map((day) => (
-          <div
-            key={day}
-            className={`day ${
-              !isSameMonth(day, monthStart) ? "disabled" : ""
-            } ${isToday(day) ? "today" : ""} ${
-              selectedDate &&
-              format(day, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
-                ? "selected"
-                : ""
-            }`}
-            onClick={() => setSelectedDate(day)}
-          >
-            {getDate(day)}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  return (
-    <div className="calendar">
-      {renderHeader()}
-      {renderDays()}
-      {renderCells()}
-    </div>
-  );
-};
-
-// --- Main Component ---
 export default function DoctorProfile() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(null);
   const { id } = useParams();
-
-  // ✅ 2. Initialize the navigate hook
   const navigate = useNavigate();
 
+  // Find the correct doctor from the data array
   const doctorData = doctors.find((doc) => doc.id === parseInt(id));
 
+  const [reviews, setReviews] = useState(doctorData?.reviews || []);
+  const [newComment, setNewComment] = useState("");
+  const [currentRating, setCurrentRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  // Handle submitting a new review
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    if (newComment.trim() === "" || currentRating === 0) {
+      alert("Please provide a rating and a comment.");
+      return;
+    }
+    const newReviewObject = {
+      name: "Your Name", // This would be the logged-in user's name
+      rating: currentRating,
+      comment: newComment,
+      date: "Just now",
+    };
+    setReviews([newReviewObject, ...reviews]);
+    setNewComment("");
+    setCurrentRating(0);
+  };
+
+  // If doctor not found
   if (!doctorData) {
     return (
       <div className="container text-center py-5">
         <h2>Doctor Not Found</h2>
-        <p>The profile you are looking for does not exist.</p>
       </div>
     );
   }
 
-  // ✅ 3. Create a handler function to navigate with data
-  const handleBookAppointment = () => {
-    navigate("/book-now", {
-      state: {
-        doctor: doctorData,
-        date: selectedDate,
-        time: selectedTime,
-      },
-    });
-  };
-
   return (
     <div className="container py-5">
-      <div className="row g-4">
-        {/* Left Column: Doctor Details */}
-        <div className="col-lg-8">
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
           {/* Main Info Card */}
           <div className="card shadow-sm border-0 p-4 mb-4 doctor-profile-card">
-            {/* (No changes in this section) */}
-            <div className="d-flex align-items-start">
-              <div className="doctor-img-placeholder me-4">
+            <div className="d-flex flex-column flex-md-row align-items-center">
+              <div className="doctor-img-placeholder me-md-4 mb-3 mb-md-0">
                 <svg
                   width="100"
                   height="100"
@@ -143,12 +68,12 @@ export default function DoctorProfile() {
                   <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
                 </svg>
               </div>
-              <div className="flex-grow-1">
+              <div className="flex-grow-1 text-center text-md-start">
                 <h2 className="fw-bold mb-1">{doctorData.name}</h2>
                 <p className="text-primary fw-semibold">
                   {doctorData.specialty}
                 </p>
-                <div className="d-flex flex-wrap align-items-center text-muted small gap-3 mb-3">
+                <div className="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center text-muted small gap-3 mb-3">
                   <span className="d-flex align-items-center text-warning fw-bold">
                     <FaStar className="me-1" /> {doctorData.rating} (
                     {doctorData.reviewsCount} reviews)
@@ -164,14 +89,26 @@ export default function DoctorProfile() {
                   Consultation Fee: ${doctorData.consultationFee}
                 </p>
               </div>
+              <div className="mt-3 mt-md-0 ms-md-auto">
+                <button
+                  className="btn btn-primary btn-lg px-5"
+                  onClick={() =>
+                    navigate("/book-now", { state: { doctor: doctorData } })
+                  }
+                >
+                  Book an Appointment
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* About, Qualifications, Reviews Cards (No changes here) */}
+          {/* About Card */}
           <div className="card shadow-sm border-0 p-4 mb-4 profile-section-card">
             <h4 className="fw-bold mb-3">About</h4>
             <p className="text-muted">{doctorData.about}</p>
           </div>
+
+          {/* Qualifications Card */}
           <div className="card shadow-sm border-0 p-4 mb-4 profile-section-card">
             <h4 className="fw-bold mb-3 d-flex align-items-center">
               <FaGraduationCap className="me-2 text-primary" />
@@ -186,9 +123,52 @@ export default function DoctorProfile() {
               ))}
             </ul>
           </div>
+
+          {/* Patient Reviews Card with Form */}
           <div className="card shadow-sm border-0 p-4 profile-section-card">
             <h4 className="fw-bold mb-3">Patient Reviews</h4>
-            {doctorData.reviews.map((review, index) => (
+            {/* New Review Form */}
+            <div className="mb-4 p-3 bg-light border rounded">
+              <h5 className="mb-3">Leave a Review</h5>
+              <form onSubmit={handleSubmitReview}>
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Your Rating</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <FaStar
+                        key={star}
+                        className={`star ${
+                          hoverRating >= star || currentRating >= star
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() => setCurrentRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="comment" className="form-label fw-semibold">
+                    Your Comment
+                  </label>
+                  <textarea
+                    id="comment"
+                    className="form-control"
+                    rows="3"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Share your experience..."
+                  ></textarea>
+                </div>
+                <button type="submit" className="btn btn-primary">
+                  Submit Review
+                </button>
+              </form>
+            </div>
+            {/* Display Existing and New Reviews */}
+            {reviews.map((review, index) => (
               <div key={index} className="review-item mb-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="fw-semibold mb-0">{review.name}</p>
@@ -202,60 +182,6 @@ export default function DoctorProfile() {
                 <p className="text-muted small">{review.comment}</p>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Right Column: Booking */}
-        <div className="col-lg-4">
-          <div className="card shadow-sm border-0 p-4 mb-4">
-            <h4 className="fw-bold mb-3">Book Appointment</h4>
-            <label className="form-label fw-semibold">Select Date</label>
-            <Calendar
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            />
-
-            <label className="form-label fw-semibold mt-4">
-              Available Times
-            </label>
-            <div className="time-slot-grid">
-              {doctorData.availableTimes.map((time) => (
-                <button
-                  key={time}
-                  className={`btn time-slot ${
-                    selectedTime === time ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedTime(time)}
-                >
-                  {time}
-                </button>
-              ))}
-            </div>
-
-            {/* ✅ 4. The button now calls the handler on click */}
-            <button
-              className="btn btn-primary w-100 mt-4"
-              disabled={!selectedDate || !selectedTime}
-              onClick={handleBookAppointment}
-            >
-              Book Appointment
-            </button>
-          </div>
-
-          <div className="card shadow-sm border-0 p-4">
-            {/* (No changes in this section) */}
-            <h5 className="fw-bold mb-3">Contact Information</h5>
-            <p className="text-muted d-flex align-items-center mb-2">
-              <FaPhone className="me-2 text-primary" /> +1 (555) 123-4567
-            </p>
-            <p className="text-muted d-flex align-items-center mb-2">
-              <FaEnvelope className="me-2 text-primary" />{" "}
-              dr.johnson@citymedical.com
-            </p>
-            <p className="text-muted d-flex align-items-center mb-0">
-              <FaMapMarkerAlt className="me-2 text-primary" />{" "}
-              {doctorData.location}
-            </p>
           </div>
         </div>
       </div>

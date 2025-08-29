@@ -58,14 +58,16 @@ const DoctorCard = ({ doctor }) => (
         </div>
 
         <div className="d-grid gap-2 d-sm-flex">
-          {/* ✅ MODIFIED: The "Book Now" button is now a Link pointing to the doctor's profile */}
+          {/* ✅ MODIFIED: The "Book Now" button now links directly to the booking page */}
           <Link
-            to={`/doctor/${doctor.id}`}
+            to="/book-now"
+            state={{ doctor: doctor }} // Pass the doctor object in the state
             className="btn btn-primary flex-grow-1"
           >
             Book Now
           </Link>
 
+          {/* This button still correctly links to the detailed profile page */}
           <Link
             to={`/doctor/${doctor.id}`}
             className="btn btn-outline-secondary flex-grow-1"
