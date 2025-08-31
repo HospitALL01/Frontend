@@ -3,40 +3,95 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [role, setRole] = useState("Patient");
+
+  // form states
+  const [role, setRole] = useState("Patient"); // keep role but single API
   const [fullname, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [warning, setWarning] = useState(""); // For showing warning message
 
-  const handleSubmit = (e) => {
+  // ui states
+  const [warning, setWarning] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // validators
+  const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val).toLowerCase());
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register:", { fullname, email, role, password });
+    setWarning("");
+    setSuccess("");
 
-    // Send a request to check if the email exists
-    fetch("http://127.0.0.1:8000/api/check-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.exists) {
-          setWarning("This email is already registered!"); // Show warning if email exists
-        } else {
-          // Proceed with the registration if email doesn't exist
-          fetch("http://127.0.0.1:8000/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fullname, email, password, role }),
-          })
-            .then((res) => res.json())
-            .then((result) => {
-              console.log(result);
-              navigate("/login");
-            });
-        }
+    // basic client-side validation
+    if (!fullname.trim()) {
+      setWarning("Please enter your full name.");
+      return;
+    }
+    if (!email.trim() || !isValidEmail(email.trim())) {
+      setWarning("Please enter a valid email address.");
+      return;
+    }
+    if (!password || password.length < 6) {
+      setWarning("Password must be at least 6 characters.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // 1) check if email exists (same as before)
+      const checkRes = await fetch("http://127.0.0.1:8000/api/check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
       });
+
+      if (!checkRes.ok) {
+        throw new Error("Failed to check email");
+      }
+      const checkJson = await checkRes.json();
+
+      if (checkJson?.exists) {
+        setWarning("This email is already registered!");
+        setLoading(false);
+        return;
+      }
+
+      // 2) single registration endpoint
+      const registerUrl = "http://127.0.0.1:8000/api/register";
+
+      // 3) perform registration (send role, fullname, email, password)
+      const regRes = await fetch(registerUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullname: fullname.trim(),
+          email: email.trim(),
+          password,
+          role, // backend একটাই endpoint এ role ধরবে
+        }),
+      });
+
+      if (!regRes.ok) {
+        let msg = "Registration failed";
+        try {
+          const errJson = await regRes.json();
+          if (errJson?.error) msg = errJson.error;
+        } catch {
+          // ignore parse error
+        }
+        throw new Error(msg);
+      }
+
+      setSuccess("Account created successfully! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 800);
+    } catch (err) {
+      console.error("Signup error:", err);
+      setWarning(err?.message || "An error occurred during signup. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,13 +109,22 @@ export default function Register() {
 
         {/* Title */}
         <h5 className='text-center fw-bold'>Create Account</h5>
-        <p className='text-center text-muted mb-4'>Join our healthcare platform</p>
+        <p className='text-center text-muted mb-3'>Join our healthcare platform</p>
 
-        {/* Warning Message */}
-        {warning && <p className='text-danger text-center'>{warning}</p>}
+        {/* Alerts */}
+        {warning ? (
+          <div className='alert alert-danger py-2' role='alert'>
+            {warning}
+          </div>
+        ) : null}
+        {success ? (
+          <div className='alert alert-success py-2' role='alert'>
+            {success}
+          </div>
+        ) : null}
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className='mb-3'>
             <label className='form-label'>Full Name</label>
             <input
@@ -69,6 +133,7 @@ export default function Register() {
               placeholder='Enter your full name'
               value={fullname}
               onChange={(e) => setName(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
@@ -81,13 +146,15 @@ export default function Register() {
               placeholder='Enter your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
 
+          {/* Role select kept, but single API will handle it */}
           <div className='mb-3'>
             <label className='form-label'>I am a</label>
-            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)}>
+            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
               <option>Patient</option>
               <option>Doctor</option>
               <option>Admin</option>
@@ -99,19 +166,21 @@ export default function Register() {
             <input
               type='password'
               className='form-control'
-              placeholder='Create a password'
+              placeholder='Create a password (min 6 chars)'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
               required
+              minLength={6}
             />
           </div>
 
-          <button type='submit' className='btn btn-primary w-100'>
-            Create Account
+          <button type='submit' className='btn btn-primary w-100' disabled={loading}>
+            {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
 
-        <p className='text-center mt-3'>
+        <p className='text-center mt-3 mb-0'>
           Already have an account? <a href='/login'>Sign in here</a>
         </p>
       </div>
