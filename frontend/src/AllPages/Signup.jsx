@@ -1,29 +1,67 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Signup() {
   const navigate = useNavigate();
 
   // form states
-  const [role, setRole] = useState("Patient"); // keep role but single API
+  const [role, setRole] = useState("Patient"); // Patient | Doctor | Admin
   const [fullname, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
   // ui states
   const [warning, setWarning] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // validators
+  const API_BASE = "http://127.0.0.1:8000/api";
+
   const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val).toLowerCase());
+
+  // ✅ Bangladesh phone: must start with 01 and total 11 digits
+  const isValidBDPhone = (val) => /^01\d{9}$/.test(val);
+
+  const getRegisterUrl = () => {
+    if (role === "Patient") return `${API_BASE}/patient/register`;
+    if (role === "Doctor") return `${API_BASE}/doctor/register`;
+    return null; // Admin not supported
+  };
+
+  // both tables duplicate check (patient + doctor)
+  const checkEmailExistsAcrossBoth = async (emailToCheck) => {
+    try {
+      const [patientRes, doctorRes] = await Promise.all([
+        fetch(`${API_BASE}/patient/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailToCheck }),
+        }),
+        fetch(`${API_BASE}/doctor/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailToCheck }),
+        }),
+      ]);
+
+      const patientJson = await patientRes.json().catch(() => ({}));
+      const doctorJson = await doctorRes.json().catch(() => ({}));
+
+      const existsPatient = !!patientJson?.exists;
+      const existsDoctor = !!doctorJson?.exists;
+
+      return existsPatient || existsDoctor;
+    } catch {
+      throw new Error("Failed to verify email. Please try again.");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setWarning("");
     setSuccess("");
 
-    // basic client-side validation
     if (!fullname.trim()) {
       setWarning("Please enter your full name.");
       return;
@@ -37,65 +75,78 @@ export default function Register() {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      // 1) check if email exists (same as before)
-      const checkRes = await fetch("http://127.0.0.1:8000/api/check-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-
-      if (!checkRes.ok) {
-        throw new Error("Failed to check email");
+    // ✅ Patient/Doctor উভয়ের জন্য ফোন আবশ্যক এবং BD ফরম্যাট চেক
+    if (role === "Patient" || role === "Doctor") {
+      if (!phone.trim()) {
+        setWarning("Please enter your phone number.");
+        return;
       }
-      const checkJson = await checkRes.json();
+      if (!isValidBDPhone(phone.trim())) {
+        setWarning("Phone must start with 01 and be exactly 11 digits.");
+        return;
+      }
+    }
 
-      if (checkJson?.exists) {
-        setWarning("This email is already registered!");
+    const registerUrl = getRegisterUrl();
+    if (!registerUrl) {
+      setWarning("Admin signup is not supported from this page.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const alreadyExists = await checkEmailExistsAcrossBoth(email.trim());
+      if (alreadyExists) {
+        setWarning("This email is already registered.");
         setLoading(false);
         return;
       }
 
-      // 2) single registration endpoint
-      const registerUrl = "http://127.0.0.1:8000/api/register";
+      const payload = {
+        fullname: fullname.trim(),
+        email: email.trim(),
+        password,
+        phone: phone.trim(), // always send for Patient/Doctor
+      };
 
-      // 3) perform registration (send role, fullname, email, password)
-      const regRes = await fetch(registerUrl, {
+      const res = await fetch(registerUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullname: fullname.trim(),
-          email: email.trim(),
-          password,
-          role, // backend একটাই endpoint এ role ধরবে
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (!regRes.ok) {
+      if (!res.ok) {
         let msg = "Registration failed";
         try {
-          const errJson = await regRes.json();
+          const errJson = await res.json();
           if (errJson?.error) msg = errJson.error;
-        } catch {
-          // ignore parse error
-        }
+          if (errJson?.message) msg = errJson.message;
+        } catch {}
         throw new Error(msg);
       }
 
       setSuccess("Account created successfully! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 800);
+      setTimeout(() => navigate("/login"), 900);
     } catch (err) {
-      console.error("Signup error:", err);
-      setWarning(err?.message || "An error occurred during signup. Please try again.");
+      setWarning(err?.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ only digits in phone input (strip non-digits)
+  const handlePhoneChange = (e) => {
+    const digitsOnly = e.target.value.replace(/\D/g, "");
+    // limit to 11 digits
+    setPhone(digitsOnly.slice(0, 11));
+  };
+
+  const showPhone = role === "Doctor" || role === "Patient";
+
   return (
-    <div className='d-flex justify-content-center align-items-center vh-100 bg-light'>
+    <div
+      className='min-vh-100 bg-light d-flex justify-content-center align-items-start'
+      style={{ paddingTop: "40px", paddingBottom: "40px" }}>
       <div className='card shadow p-4' style={{ width: "400px", borderRadius: "15px" }}>
         {/* Logo */}
         <div className='text-center mb-4'>
@@ -107,21 +158,19 @@ export default function Register() {
           <h4 className='mt-2'>HospitALL</h4>
         </div>
 
-        {/* Title */}
         <h5 className='text-center fw-bold'>Create Account</h5>
         <p className='text-center text-muted mb-3'>Join our healthcare platform</p>
 
-        {/* Alerts */}
-        {warning ? (
+        {warning && (
           <div className='alert alert-danger py-2' role='alert'>
             {warning}
           </div>
-        ) : null}
-        {success ? (
+        )}
+        {success && (
           <div className='alert alert-success py-2' role='alert'>
             {success}
           </div>
-        ) : null}
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
@@ -151,7 +200,6 @@ export default function Register() {
             />
           </div>
 
-          {/* Role select kept, but single API will handle it */}
           <div className='mb-3'>
             <label className='form-label'>I am a</label>
             <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
@@ -160,6 +208,26 @@ export default function Register() {
               <option>Admin</option>
             </select>
           </div>
+
+          {showPhone && (
+            <div className='mb-3'>
+              <label className='form-label'>Phone</label>
+              <input
+                type='tel'
+                className='form-control'
+                placeholder='01XXXXXXXXX'
+                value={phone}
+                onChange={handlePhoneChange}
+                disabled={loading}
+                inputMode='numeric'
+                pattern='01[0-9]{9}'
+                minLength={11}
+                maxLength={11}
+                required
+              />
+              {/* <small className='text-muted'>Must start with 01 and be exactly 11 digits.</small> */}
+            </div>
+          )}
 
           <div className='mb-3'>
             <label className='form-label'>Password</label>
