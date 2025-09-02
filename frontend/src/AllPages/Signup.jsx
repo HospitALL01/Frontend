@@ -1,31 +1,152 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
-    const navigate = useNavigate();
-  const [role, setRole] = useState("Patient");
+export default function Signup() {
+  const navigate = useNavigate();
+
+  // form states
+  const [role, setRole] = useState("Patient"); // Patient | Doctor | Admin
   const [fullname, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Register:", { fullname, email, role, password });
+  // ui states
+  const [warning, setWarning] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    fetch("http://127.0.0.1:8000/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullname, email, password, role }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        navigate('/login');
-      });
+  const API_BASE = "http://127.0.0.1:8000/api";
+
+  const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val).toLowerCase());
+
+  // ✅ Bangladesh phone: must start with 01 and total 11 digits
+  const isValidBDPhone = (val) => /^01\d{9}$/.test(val);
+
+  const getRegisterUrl = () => {
+    if (role === "Patient") return `${API_BASE}/patient/register`;
+    if (role === "Doctor") return `${API_BASE}/doctor/register`;
+    return null; // Admin not supported
   };
 
+  // both tables duplicate check (patient + doctor)
+  const checkEmailExistsAcrossBoth = async (emailToCheck) => {
+    try {
+      const [patientRes, doctorRes] = await Promise.all([
+        fetch(`${API_BASE}/patient/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailToCheck }),
+        }),
+        fetch(`${API_BASE}/doctor/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailToCheck }),
+        }),
+      ]);
+
+      const patientJson = await patientRes.json().catch(() => ({}));
+      const doctorJson = await doctorRes.json().catch(() => ({}));
+
+      const existsPatient = !!patientJson?.exists;
+      const existsDoctor = !!doctorJson?.exists;
+
+      return existsPatient || existsDoctor;
+    } catch {
+      throw new Error("Failed to verify email. Please try again.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setWarning("");
+    setSuccess("");
+
+    if (!fullname.trim()) {
+      setWarning("Please enter your full name.");
+      return;
+    }
+    if (!email.trim() || !isValidEmail(email.trim())) {
+      setWarning("Please enter a valid email address.");
+      return;
+    }
+    if (!password || password.length < 6) {
+      setWarning("Password must be at least 6 characters.");
+      return;
+    }
+
+    // ✅ Patient/Doctor উভয়ের জন্য ফোন আবশ্যক এবং BD ফরম্যাট চেক
+    if (role === "Patient" || role === "Doctor") {
+      if (!phone.trim()) {
+        setWarning("Please enter your phone number.");
+        return;
+      }
+      if (!isValidBDPhone(phone.trim())) {
+        setWarning("Phone must start with 01 and be exactly 11 digits.");
+        return;
+      }
+    }
+
+    const registerUrl = getRegisterUrl();
+    if (!registerUrl) {
+      setWarning("Admin signup is not supported from this page.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const alreadyExists = await checkEmailExistsAcrossBoth(email.trim());
+      if (alreadyExists) {
+        setWarning("This email is already registered.");
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        fullname: fullname.trim(),
+        email: email.trim(),
+        password,
+        phone: phone.trim(), // always send for Patient/Doctor
+      };
+
+      const res = await fetch(registerUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        let msg = "Registration failed";
+        try {
+          const errJson = await res.json();
+          if (errJson?.error) msg = errJson.error;
+          if (errJson?.message) msg = errJson.message;
+        } catch {}
+        throw new Error(msg);
+      }
+
+      setSuccess("Account created successfully! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 900);
+    } catch (err) {
+      setWarning(err?.message || "Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ only digits in phone input (strip non-digits)
+  const handlePhoneChange = (e) => {
+    const digitsOnly = e.target.value.replace(/\D/g, "");
+    // limit to 11 digits
+    setPhone(digitsOnly.slice(0, 11));
+  };
+
+  const showPhone = role === "Doctor" || role === "Patient";
+
   return (
-    <div className='d-flex justify-content-center align-items-center vh-100 bg-light'>
+    <div
+      className='min-vh-100 bg-light d-flex justify-content-center align-items-start'
+      style={{ paddingTop: "40px", paddingBottom: "40px" }}>
       <div className='card shadow p-4' style={{ width: "400px", borderRadius: "15px" }}>
         {/* Logo */}
         <div className='text-center mb-4'>
@@ -37,12 +158,22 @@ export default function Register() {
           <h4 className='mt-2'>HospitALL</h4>
         </div>
 
-        {/* Title */}
         <h5 className='text-center fw-bold'>Create Account</h5>
-        <p className='text-center text-muted mb-4'>Join our healthcare platform</p>
+        <p className='text-center text-muted mb-3'>Join our healthcare platform</p>
+
+        {warning && (
+          <div className='alert alert-danger py-2' role='alert'>
+            {warning}
+          </div>
+        )}
+        {success && (
+          <div className='alert alert-success py-2' role='alert'>
+            {success}
+          </div>
+        )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className='mb-3'>
             <label className='form-label'>Full Name</label>
             <input
@@ -51,6 +182,7 @@ export default function Register() {
               placeholder='Enter your full name'
               value={fullname}
               onChange={(e) => setName(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
@@ -63,37 +195,60 @@ export default function Register() {
               placeholder='Enter your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
               required
             />
           </div>
 
           <div className='mb-3'>
             <label className='form-label'>I am a</label>
-            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)}>
+            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
               <option>Patient</option>
               <option>Doctor</option>
               <option>Admin</option>
             </select>
           </div>
 
+          {showPhone && (
+            <div className='mb-3'>
+              <label className='form-label'>Phone</label>
+              <input
+                type='tel'
+                className='form-control'
+                placeholder='01XXXXXXXXX'
+                value={phone}
+                onChange={handlePhoneChange}
+                disabled={loading}
+                inputMode='numeric'
+                pattern='01[0-9]{9}'
+                minLength={11}
+                maxLength={11}
+                required
+              />
+              {/* <small className='text-muted'>Must start with 01 and be exactly 11 digits.</small> */}
+            </div>
+          )}
+
           <div className='mb-3'>
             <label className='form-label'>Password</label>
             <input
               type='password'
               className='form-control'
-              placeholder='Create a password'
+              placeholder='Create a password (min 6 chars)'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
               required
+              minLength={6}
             />
           </div>
 
-          <button type='submit' className='btn btn-primary w-100'>
-            Create Account
+          <button type='submit' className='btn btn-primary w-100' disabled={loading}>
+            {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
 
-        <p className='text-center mt-3'>
+        <p className='text-center mt-3 mb-0'>
           Already have an account? <a href='/login'>Sign in here</a>
         </p>
       </div>
