@@ -1,6 +1,7 @@
 /* General Body Styles (Good Practice) */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   background-color: #f8f9fa;
   color: #343a40;
 }
@@ -408,4 +409,199 @@ body {
 }
 .payment-logo-text.rocket {
   color: #8a246d;
+}
+
+/* General Body Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+/* General Body Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* General Body Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* General Body Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* ------------------ Global Styles ------------------------ */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f9fc, #eaf6ff);
+  color: #333;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #002855;
+  text-shadow: 1px 2px 4px rgba(0, 40, 85, 0.15);
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #444;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #003d80;
+  text-decoration: underline;
+}
+
+/* ------------------ Buttons ------------------------ */
+button {
+  margin: 8px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.4s ease;
+  box-shadow: 0 6px 15px rgba(0, 114, 255, 0.4);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #0072ff, #004080);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 114, 255, 0.5);
+}
+
+/* ------------------ Header Section ------------------------ */
+.about-header {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  padding: 100px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-header h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #cce0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-header p {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #eaf6ff;
+}
+
+.about-header::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: url('https://svgshare.com/i/150p.svg') no-repeat center bottom;
+  background-size: cover;
+}
+
+/* ------------------ Fancy Cards ------------------------ */
+.overview-card,
+.service-card,
+.benefits-card,
+.vision-card,
+.feature-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 35px;
+  box-shadow: 0 8px 25px rgba(0, 85, 170, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.4s ease;
+}
+
+.overview-card:hover,
+.service-card:hover,
+.benefits-card:hover,
+.vision-card:hover,
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 15px 35px rgba(0, 85, 170, 0.25);
+  border: 1px solid #80bfff;
+}
+
+/* ------------------ Services ------------------------ */
+.service-card {
+  text-align: center;
+  color: #003366;
+  transition: all 0.4s ease;
+}
+.service-card h3 {
+  font-size: 1.9rem;
+  margin-bottom: 15px;
+}
+
+/* ------------------ Benefits ------------------------ */
+.benefits {
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #f5faff, #dceeff);
+  position: relative;
+}
+.benefits::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: url('https://svgshare.com/i/150U.svg') no-repeat center top;
+  background-size: cover;
+}
+
+/* ------------------ Footer ------------------------ */
+.footer {
+  background: linear-gradient(135deg, #002244, #000814);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.4);
+}
+
+.footer a {
+  color: #66b2ff;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  color: #cce0ff;
 }
