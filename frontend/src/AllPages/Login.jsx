@@ -78,8 +78,14 @@ export default function Login({ setUser }) {
       setMessage("✅ Login Successful!");
       setError("");
 
-      // redirect after a short pause
-      setTimeout(() => navigate("/home"), 1200);
+      // redirect based on role
+      if (role === "Patient") {
+        navigate("/home"); // Redirect to /home if role is Patient
+      } else if (role === "Doctor") {
+        navigate("/about"); // Redirect to /about if role is Doctor
+      } else {
+        navigate("/"); // Default fallback
+      }
     } catch (err) {
       setError(err?.message || "⚠️ Something went wrong. Try again.");
       setMessage("");
