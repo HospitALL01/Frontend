@@ -6,16 +6,17 @@ import { useNavigate } from "react-router-dom";
 
 function Home({ user }) {
   const navigate = useNavigate();
+  const role = localStorage.getItem("role"); // Patient | Doctor | null
 
   return (
     <div className='container py-5 position-relative'>
-      {/* Overlay if not logged in */}
-      {!user && (
+      {/* Overlay if not logged in OR not Patient */}
+      {(!user || role !== "Patient") && (
         <div
           className='position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center'
           style={{
             zIndex: 20,
-            backdropFilter: "blur(8px)", // nice blur effect
+            backdropFilter: "blur(8px)",
             backgroundColor: "rgba(255,255,255,0.6)",
           }}>
           <div
@@ -24,11 +25,11 @@ function Home({ user }) {
               maxWidth: "400px",
               borderRadius: "15px",
               position: "relative",
-              transform: "translateY(-60%)", // shifted upward (higher than center)
+              transform: "translateY(-60%)",
             }}>
             <h4 className='fw-bold text-primary mb-3'>Access Restricted</h4>
             <p className='text-muted mb-4'>
-              You need to <span className='fw-semibold'>login</span> to view this page.
+              Only <span className='fw-semibold'>patients</span> can view this page.
             </p>
             <div className='d-flex justify-content-center gap-2'>
               <button className='btn btn-primary' onClick={() => navigate("/login")}>
@@ -42,11 +43,11 @@ function Home({ user }) {
         </div>
       )}
 
-      {/* Main content (blurred if not logged in) */}
+      {/* Main content (blurred if not Patient) */}
       <div
         style={{
-          filter: !user ? "blur(5px)" : "none",
-          pointerEvents: !user ? "none" : "auto",
+          filter: !user || role !== "Patient" ? "blur(5px)" : "none",
+          pointerEvents: !user || role !== "Patient" ? "none" : "auto",
         }}>
         {/* Hero Section */}
         <div className='row align-items-center'>
