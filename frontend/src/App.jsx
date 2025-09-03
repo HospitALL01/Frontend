@@ -11,6 +11,7 @@ import HospitalPage from "./AllPages/Hospitals.jsx";
 import DoctorProfile from "./AllPages/DoctorProfile.jsx";
 import BookingPage from "./AllPages/BookingPage.jsx";
 import EmergencyPage from "./AllPages/EmergencyPage.jsx";
+import Profile_Doctor from "./AllPages/Profile_Doctor.jsx";
 
 // 👇 Add your public pages (guest-access)
 import About from "./AllPages/About.jsx";
@@ -18,7 +19,7 @@ import Blogs from "./AllPages/Blogs.jsx";
 import Support from "./AllPages/Support.jsx";
 
 // --- helpers ---
-const getRole = () => localStorage.getItem("role"); // "Patient" | "Doctor" | null
+const getRole = () => localStorage.getItem("role"); // "Patient" | "Doctor" | "Admin" | null
 const isLoggedIn = () => !!localStorage.getItem("token");
 
 // --- Route guards ---
@@ -56,11 +57,9 @@ export default function App() {
         <Route path='/about' element={<About />} />
         <Route path='/blogs' element={<Blogs />} />
         <Route path='/support' element={<Support />} />
-
         {/* ✅ Auth routes */}
         <Route path='/login' element={<Login setUser={setUser} />} />
         <Route path='/signup' element={<Signup />} />
-
         {/* ✅ Patient-only routes */}
         <Route path='/home' element={<PatientRoute element={<Home user={user} />} />} />
         <Route path='/find-doctors' element={<PatientRoute element={<AppointmentBooking />} />} />
@@ -68,16 +67,12 @@ export default function App() {
         <Route path='/emergency' element={<PatientRoute element={<EmergencyPage />} />} />
         <Route path='/doctor/:id' element={<PatientRoute element={<DoctorProfile user={user} />} />} />
         <Route path='/book-now' element={<PatientRoute element={<BookingPage />} />} />
-
         {/* ✅ Doctor-only routes */}
         <Route
           path='/appointments'
           element={<DoctorRoute element={<div className='container py-5'>Doctor Appointments Page</div>} />}
         />
-        <Route
-          path='/profile'
-          element={<DoctorRoute element={<div className='container py-5'>Doctor Profile Page</div>} />}
-        />
+        <Route path='/profile_doctor' element={<DoctorRoute element={<Profile_Doctor />} />} />
 
         {/* ✅ Shared (logged-in) routes */}
         <Route path='/ai' element={isLoggedIn() ? <AI user={user} /> : <Navigate to='/login' replace />} />
