@@ -672,18 +672,19 @@ p {
   border: none;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
   overflow: hidden;
 }
 
+/* ✅ MODIFIED: The box-shadow is now a darker, more defined blue */
 .blog-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 15px 35px rgba(0, 86, 179, 0.25); /* Darker blue with slightly more opacity */
 }
 
 .blog-card .card-img-top {
   height: 200px;
-  object-fit: cover; /* Prevents images from stretching */
+  object-fit: cover;
 }
 /* =================================================================== */
 /*                     NEW STYLES FOR BLOG DETAIL PAGE                 */
