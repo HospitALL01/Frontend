@@ -1,0 +1,762 @@
+/* =================================================================== */
+/*                      GLOBAL STYLES (ENHANCED)                       */
+/* =================================================================== */
+
+/* General Body Styles */
+body {
+  /* Using a modern, clean font stack */
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f4f7f9; /* Light gray-blue for a soft look */
+  color: #343a40;
+}
+
+/* Enhanced Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* Bold headings */
+  color: #002855; /* Dark blue for headings */
+}
+
+p {
+  line-height: 1.7;
+  color: #444;
+}
+
+/* =================================================================== */
+/*                      COMPONENT STYLES (EXISTING)                    */
+/* =================================================================== */
+
+/* ------------------ Navbar ------------------------ */
+.nav-link-custom {
+  position: relative;
+  color: #333 !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.nav-link-custom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #0d6efd;
+  transition: width 0.3s ease;
+}
+.nav-link-custom:hover {
+  transform: translateY(-3px);
+  color: #0d6efd !important;
+}
+.nav-link-custom:hover::after {
+  width: 100%;
+}
+
+/* ----------------------- Home Page Feature Section --------------------- */
+/* This also applies to the modal cards in About.jsx */
+.feature-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px !important;
+}
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.feature-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 0;
+  height: 3px;
+  background-color: #0d6efd;
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+.feature-card:hover::after {
+  width: calc(100% - 40px);
+}
+
+/* ----------------------- AI Chat Page Styles --------------------- */
+.chat-bubble {
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  font-size: 0.95rem;
+  max-width: 80%;
+  line-height: 1.5;
+}
+.chat-user {
+  background: #0d6efd;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-bot {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  color: #343a40;
+  border-bottom-left-radius: 4px;
+}
+
+/* --- Doctor Card (AppointmentBooking & Profile) --- */
+.doctor-card, .doctor-profile-card {
+  border-radius: 16px !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  background-color: #fff;
+}
+.doctor-card:hover, .doctor-profile-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+}
+.doctor-img-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+}
+.doctor-img-placeholder svg {
+  width: 50px;
+  height: 50px;
+}
+.verified-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 50px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.info-section {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+.availability-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  border: 1px solid #eee;
+}
+
+/* --- Profile Page & Calendar --- */
+.profile-section-card {
+  border-radius: 16px !important;
+}
+.profile-section-card .review-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+.calendar {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 5px;
+}
+.calendar-grid.days {
+  font-weight: bold;
+  color: #888;
+  font-size: 0.8rem;
+  padding-bottom: 5px;
+}
+.calendar-grid .day {
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+.calendar-grid .day:hover {
+  background-color: #f0f0f0;
+}
+.calendar-grid .day.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+.calendar-grid .day.today {
+  font-weight: bold;
+  border: 1px solid #0d6efd;
+}
+.calendar-grid .day.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+.time-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.time-slot {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+.time-slot.selected {
+  background-color: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+/* --- Emergency Page --- */
+.emergency-page-bg {
+  background-color: #fff5f5;
+}
+.btn-call-911 {
+  font-size: 1.1rem;
+  padding: 10px 30px;
+  border-radius: 50px;
+}
+.emergency-type-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #333;
+  font-weight: 500;
+}
+.emergency-type-btn:hover {
+  background-color: #e9ecef;
+}
+.emergency-type-btn.active {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+.emergency-type-btn svg {
+  margin-right: 12px;
+}
+.location-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+}
+.ambulance-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.ambulance-status {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+}
+.ambulance-status.available {
+  background-color: #198754;
+}
+.ambulance-status.busy {
+  background-color: #6c757d;
+}
+.request-ambulance-btn:disabled {
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+  cursor: not-allowed;
+}
+.tips-box {
+  background-color: #e7f1ff;
+  border: 1px solid #bde0fe;
+  padding: 20px;
+  border-radius: 8px;
+}
+.contact-card {
+  text-align: center;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.contact-card .icon-wrapper {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+.bg-danger-soft {
+  background-color: #ffe3e3;
+}
+.bg-primary-soft {
+  background-color: #e7f1ff;
+}
+.bg-success-soft {
+  background-color: #d1e7dd;
+}
+.map-container {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+/* --- Star Rating & Payment --- */
+.star-rating .star {
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+.star-rating .star.active {
+  color: #ffc107;
+}
+.payment-logo-wrapper {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.payment-logo-wrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #0d6efd;
+}
+.payment-logo-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: bold;
+  height: 60px;
+  width: 120px;
+  border-radius: 4px;
+}
+.payment-logo-text.bkash {
+  color: #d82a77;
+}
+.payment-logo-text.nagad {
+  color: #f47920;
+}
+.payment-logo-text.rocket {
+  color: #8a246d;
+}
+
+/* =================================================================== */
+/*             NEW PROFESSIONAL STYLES (ABOUT, BLOGS, SUPPORT)         */
+/* =================================================================== */
+
+/* ------------------ Header Section ------------------------ */
+.about-header {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.about-header h1 {
+  /* Overrides the default dark blue for the header */
+  color: white; 
+  text-shadow: 1px 2px 4px rgba(0, 40, 85, 0.3);
+}
+
+.about-header p {
+  color: #eaf6ff; /* Lighter color for the paragraph text */
+}
+
+/* Light background for main content sections */
+.about-section-bg {
+  background-color: #f4f7f9;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+/* ------------------ Fancy Cards ------------------------ */
+.info-card {
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 35px;
+  box-shadow: 0 8px 25px rgba(0, 85, 170, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.4s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 85, 170, 0.2);
+}
+
+/* ------------------ Benefits List ------------------------ */
+.benefits-list {
+  list-style: none;
+  padding-left: 0;
+}
+.benefits-list li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.benefits-list li::before {
+  content: '✔';
+  position: absolute;
+  left: 0;
+  color: #0d6efd;
+  font-weight: bold;
+}
+/* =================================================================== */
+/*             NEW PROFESSIONAL DESIGN (From Image)                    */
+/* =================================================================== */
+
+/* --- Hero Section --- */
+.hero-section-new {
+  position: relative;
+  padding: 8rem 0;
+  background-image: url('https://images.unsplash.com/photo-1550831107-1553da8c8464?q=80&w=1974&auto=format&fit=crop'); /* Placeholder doctor image */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Adds a white overlay to make text more readable */
+.hero-section-new::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Ensures content is above the overlay */
+.hero-section-new .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  line-height: 1.2;
+}
+
+/* Green line above the main heading */
+.line-above-text {
+  width: 80px;
+  height: 6px;
+  background-color: rgb(21, 143, 192); /* The brand's green color */
+  border-radius: 3px;
+  margin-bottom: 1.5rem;
+}
+
+/* Custom color for specific text */
+.text-brand-green {
+  color: rgb(21, 143, 192);
+}
+
+/* --- Custom Green Button --- */
+.btn-brand-green {
+  background-color: #1de9b6;
+  color: #fff;
+  border-radius: 50px;
+  padding: 12px 30px;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-brand-green:hover {
+  background-color: #00bfa5;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(29, 233, 182, 0.3);
+}
+
+/* --- Purple Appointment Banner --- */
+.appointment-banner {
+  background-color: #2d288c; /* The brand's purple color */
+  padding: 2.5rem 0;
+  color: white;
+}
+
+.banner-icon {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-right: 1rem;
+}
+
+.banner-icon-small {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.btn-light-outline {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: white;
+  border-radius: 50px;
+  padding: 5px 15px;
+  font-size: 0.8rem;
+}
+
+.btn-light-outline:hover {
+  background-color: white;
+  color: #4a2f6b;
+}
+
+.emergency-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.emergency-link:hover {
+  color: #3238d9;
+}
+/* --- Hero Section --- */
+.hero-section-new {
+  position: relative;
+  padding: 8rem 0;
+  /* ✅ REMOVED: The background-image URL is now set in the component */
+  background-size: cover;
+  background-position: center;
+}
+/* --- Purple Appointment Banner / Footer --- */
+.appointment-banner {
+  background-color: #4a2f6b; /* The brand's purple color */
+  padding: 2.5rem 0;
+  color: white;
+}
+
+/* New class to ensure correct padding for the main footer content */
+.main-footer {
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+/* A styled horizontal rule for the footer */
+.footer-divider {
+  border-color: rgba(255, 255, 255, 0.15);
+  margin: 2rem 0;
+}
+
+/* Pre-footer section (the old banner content) */
+.pre-footer-section {
+  padding-bottom: 1.5rem;
+}
+
+/* Styling for links in the footer */
+.footer-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Light green color for the footer brand title */
+.text-brand-green-light {
+  color: red; 
+}
+/* --- Purple Appointment Banner --- */
+.appointment-banner {
+  background-color: rgb(21, 143, 192); 
+  padding: 2.5rem 0;
+  color: white;
+}
+
+.banner-icon {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-right: 1rem;
+}
+
+.banner-icon-small {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.btn-light-outline {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: white;
+  border-radius: 50px;
+  padding: 5px 15px;
+  font-size: 0.8rem;
+}
+
+.btn-light-outline:hover {
+  background-color: white;
+  color: #4a2f6b;
+}
+
+/* ✅ MODIFIED: Made this rule more specific to override default link colors */
+.appointment-banner .emergency-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.appointment-banner .emergency-link:hover {
+  color:red; /* The brand's green color on hover */
+}
+/* =================================================================== */
+/*                       NEW STYLES FOR BLOG PAGE                      */
+/* =================================================================== */
+
+/* --- Blogs Page Header --- */
+.blogs-header {
+  position: relative;
+  padding: 6rem 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Adds a dark overlay to make white text readable on any image */
+.blogs-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+
+/* Ensures content is above the overlay */
+.blogs-header .container {
+  position: relative;
+  z-index: 2;
+}
+
+.blogs-header h1, .blogs-header p {
+  color: white;
+}
+
+/* Light background for the main content */
+.blogs-section-bg {
+  background-color: #f4f7f9;
+  padding-top: 1px;
+}
+
+/* --- Blog Card Styling --- */
+.blog-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  overflow: hidden;
+}
+
+/* ✅ MODIFIED: The box-shadow is now a darker, more defined blue */
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 86, 179, 0.25); /* Darker blue with slightly more opacity */
+}
+
+.blog-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+/* =================================================================== */
+/*                     NEW STYLES FOR BLOG DETAIL PAGE                 */
+/* =================================================================== */
+
+/* --- Blog Detail Page Header --- */
+.blog-detail-header {
+  position: relative;
+  padding: 8rem 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0 0 30px 30px;
+  margin-bottom: -50px; /* Pulls the content below it up slightly */
+  z-index: 1;
+}
+
+.blog-detail-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+  border-radius: 0 0 30px 30px;
+}
+
+.blog-detail-header h1 {
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+/* --- Blog Detail Content & Sidebar --- */
+.blog-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.blog-sidebar {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+.recent-post-link {
+  color: #333;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.recent-post-link:hover {
+  color: #0d6efd;
+}
+/* =================================================================== */
+/*             STYLES FOR BLOG SECTION HEADINGS                        */
+/* =================================================================== */
+
+.section-heading {
+  position: relative;
+  margin-bottom: 4rem !important; /* Adds more space below the heading */
+  font-weight: 800 !important; /* Makes the font extra bold */
+  font-size: 2.5rem; /* Makes the heading a bit larger */
+}
+
+/* This creates the decorative line below the heading */
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -15px; /* Position the line below the text */
+  left: 50%; /* Center the line */
+  transform: translateX(-50%); /* Precisely center the line */
+  width: 100px; /* Width of the line */
+  height: 5px; /* Thickness of the line */
+  background: linear-gradient(90deg, #00c6ff, #0072ff); /* Blue gradient */
+  border-radius: 3px;
+}
