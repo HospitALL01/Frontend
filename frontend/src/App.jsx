@@ -11,19 +11,19 @@ import HospitalPage from "./AllPages/Hospitals.jsx";
 import DoctorProfile from "./AllPages/DoctorProfile.jsx";
 import BookingPage from "./AllPages/BookingPage.jsx";
 import EmergencyPage from "./AllPages/EmergencyPage.jsx";
-
 import AdminDashboard from "./AllPages/AdminDashboard.jsx";
-
 import Profile_Doctor from "./AllPages/Profile_Doctor.jsx";
 
-
-// 👇 Add your public pages (guest-access)
+// Public pages (guest-access)
 import About from "./AllPages/About.jsx";
 import Blogs from "./AllPages/Blogs.jsx";
 import Support from "./AllPages/Support.jsx";
+import BlogDetailPage from "./AllPages/BlogDetailPage.jsx";
+// ✅ 1. IMPORT the new 'AllBlogsPage' component
+import AllBlogsPage from "./AllPages/AllBlogsPage.jsx";
 
 // --- helpers ---
-const getRole = () => localStorage.getItem("role"); // "Patient" | "Doctor" | "Admin" | null
+const getRole = () => localStorage.getItem("role");
 const isLoggedIn = () => !!localStorage.getItem("token");
 
 // --- Route guards ---
@@ -33,14 +33,12 @@ const PatientRoute = ({ element }) =>
   ) : (
     <Navigate to="/login" replace />
   );
-
 const DoctorRoute = ({ element }) =>
   isLoggedIn() && getRole() === "Doctor" ? (
     element
   ) : (
     <Navigate to="/login" replace />
   );
-
 const AdminRoute = ({ element }) =>
   isLoggedIn() && getRole() === "Admin" ? (
     element
@@ -52,7 +50,6 @@ export default function App() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // restore user (no auto-redirect here)
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
@@ -72,10 +69,14 @@ export default function App() {
 
       <Routes>
         {/* ✅ Public routes (guest can access without login) */}
-
         <Route path="/" element={<About />} />
         <Route path="/about" element={<About />} />
         <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/:id" element={<BlogDetailPage />} />
+
+        {/* ✅ 2. ADD the new route for the "See More" page */}
+        <Route path="/blogs/all" element={<AllBlogsPage />} />
+
         <Route path="/support" element={<Support />} />
 
         {/* ✅ Auth routes */}
@@ -108,22 +109,6 @@ export default function App() {
           element={<PatientRoute element={<BookingPage />} />}
         />
 
-=======
-        <Route path='/' element={<About />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/blogs' element={<Blogs />} />
-        <Route path='/support' element={<Support />} />
-        {/* ✅ Auth routes */}
-        <Route path='/login' element={<Login setUser={setUser} />} />
-        <Route path='/signup' element={<Signup />} />
-        {/* ✅ Patient-only routes */}
-        <Route path='/home' element={<PatientRoute element={<Home user={user} />} />} />
-        <Route path='/find-doctors' element={<PatientRoute element={<AppointmentBooking />} />} />
-        <Route path='/hospitals' element={<PatientRoute element={<HospitalPage />} />} />
-        <Route path='/emergency' element={<PatientRoute element={<EmergencyPage />} />} />
-        <Route path='/doctor/:id' element={<PatientRoute element={<DoctorProfile user={user} />} />} />
-        <Route path='/book-now' element={<PatientRoute element={<BookingPage />} />} />
-
         {/* ✅ Doctor-only routes */}
         <Route
           path="/appointments"
@@ -135,7 +120,6 @@ export default function App() {
             />
           }
         />
-
         <Route
           path="/profile"
           element={
@@ -146,9 +130,10 @@ export default function App() {
             />
           }
         />
-
-        <Route path='/profile_doctor' element={<DoctorRoute element={<Profile_Doctor />} />} />
-
+        <Route
+          path="/profile_doctor"
+          element={<DoctorRoute element={<Profile_Doctor />} />}
+        />
 
         {/* ✅ Shared (logged-in) routes */}
         <Route
@@ -158,7 +143,7 @@ export default function App() {
           }
         />
 
-        {/* Admin-only */}
+        {/* ✅ Admin-only */}
         <Route
           path="/admin-dashboard"
           element={<AdminRoute element={<AdminDashboard />} />}
