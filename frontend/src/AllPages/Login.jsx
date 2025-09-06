@@ -2,6 +2,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * প্রোফাইল ম্যাপ লোড/সেভ (Signup-এর সাথে একই স্ট্রাকচার)
+ */
+const loadProfileMap = () => {
+  try {
+    return JSON.parse(localStorage.getItem("profileByEmail") || "{}");
+  } catch {
+    return {};
+  }
+};
+const saveProfileMap = (map) => {
+  localStorage.setItem("profileByEmail", JSON.stringify(map));
+};
+
 export default function Login({ setUser }) {
   const [role, setRole] = useState("Doctor"); // Doctor | Patient | Admin
   const [email, setEmail] = useState("");
@@ -23,6 +37,13 @@ export default function Login({ setUser }) {
     if (role === "Patient") return `${API_BASE}/api/patient/login`;
     if (role === "Admin") return null; // handled locally
     return null;
+  };
+
+  // ✅ Doctor profile keys যেটা Profile_Doctor.jsx (DoctorJoinForm) ব্যবহার করবে
+  const setDoctorPrefillKeys = (name, phone, emailVal) => {
+    if (emailVal) localStorage.setItem("doctorEmail", emailVal);
+    if (phone) localStorage.setItem("doctorPhone", phone);
+    if (name) localStorage.setItem("doctorName", name);
   };
 
   const handleSubmit = async (e) => {
@@ -47,6 +68,7 @@ export default function Login({ setUser }) {
         localStorage.setItem("user", JSON.stringify(adminUser));
         localStorage.setItem("role", "Admin");
         if (typeof setUser === "function") setUser(adminUser);
+        // Admin panel
         navigate("/admin-dashboard", { replace: true });
         return;
       }
@@ -77,17 +99,42 @@ export default function Login({ setUser }) {
 
       const userPayload = data.user || data.doctor || data.patient || null;
       const token = data.token;
-      if (!token || !userPayload)
-        throw new Error("Invalid response from server");
+      if (!token || !userPayload) throw new Error("Invalid response from server");
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userPayload));
       localStorage.setItem("role", role);
       if (typeof setUser === "function") setUser(userPayload);
 
+      // ✅ Doctor হলে, DoctorJoinForm-এর জন্য প্রিফিল ভ্যালু সেট
+      const emailLower = email.trim().toLowerCase();
+      const map = loadProfileMap();
+      // 1) Signup সময় রাখা থাকলে সেটাই প্রাধান্য
+      const fromMap = map[emailLower];
+
+      // 2) নাহলে সার্ভার রেসপন্সে name/phone থাকলে সেটি ব্যবহার
+      const derivedName = fromMap?.name || userPayload?.fullname || userPayload?.name || userPayload?.doctor_name || "";
+      const derivedPhone = fromMap?.phone || userPayload?.phone || userPayload?.doctor_phone || "";
+
+      if (role === "Doctor") {
+        // প্রিফিল কী সেট
+        setDoctorPrefillKeys(derivedName, derivedPhone, emailLower);
+
+        // ম্যাপে আপডেট/সিঙ্ক
+        const next = {
+          role: "Doctor",
+          name: derivedName,
+          phone: derivedPhone,
+        };
+        map[emailLower] = next;
+        saveProfileMap(map);
+      }
+
       setMessage("✅ Login Successful!");
+
+      // রাউটিং:
       if (role === "Patient") navigate("/home", { replace: true });
-      else if (role === "Doctor") navigate("/about", { replace: true });
+      else if (role === "Doctor") navigate("/profile-doctor", { replace: true }); // 🔁 Profile page-এ যাই
       else navigate("/", { replace: true });
     } catch (err) {
       setError(err?.message || "⚠️ Something went wrong. Try again.");
@@ -97,45 +144,36 @@ export default function Login({ setUser }) {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div
-        className="card shadow p-4"
-        style={{ width: "400px", borderRadius: "15px" }}
-      >
-        <div className="text-center mb-4">
+    <div className='d-flex justify-content-center align-items-center vh-100 bg-light'>
+      <div className='card shadow p-4' style={{ width: "400px", borderRadius: "15px" }}>
+        <div className='text-center mb-4'>
           <div
-            className="border rounded-circle d-flex justify-content-center align-items-center mx-auto"
-            style={{ width: "60px", height: "60px" }}
-          >
-            <span className="text-primary fs-3">❤</span>
+            className='border rounded-circle d-flex justify-content-center align-items-center mx-auto'
+            style={{ width: "60px", height: "60px" }}>
+            <span className='text-primary fs-3'>❤</span>
           </div>
-          <h4 className="mt-2">HospitALL</h4>
+          <h4 className='mt-2'>HospitALL</h4>
         </div>
 
-        <h5 className="text-center fw-bold">Welcome Back</h5>
-        <p className="text-center text-muted mb-4">Sign in to your account</p>
+        <h5 className='text-center fw-bold'>Welcome Back</h5>
+        <p className='text-center text-muted mb-4'>Sign in to your account</p>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="mb-3">
-            <label className="form-label">Login as</label>
-            <select
-              className="form-select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              disabled={loading}
-            >
+          <div className='mb-3'>
+            <label className='form-label'>Login as</label>
+            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
               <option>Doctor</option>
               <option>Patient</option>
               <option>Admin</option>
             </select>
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email</label>
+          <div className='mb-3'>
+            <label className='form-label'>Email</label>
             <input
-              type="email"
-              className="form-control"
-              placeholder="Enter your email"
+              type='email'
+              className='form-control'
+              placeholder='Enter your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
@@ -143,12 +181,12 @@ export default function Login({ setUser }) {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Password</label>
+          <div className='mb-3'>
+            <label className='form-label'>Password</label>
             <input
-              type="password"
-              className="form-control"
-              placeholder="Enter your password"
+              type='password'
+              className='form-control'
+              placeholder='Enter your password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
@@ -156,27 +194,22 @@ export default function Login({ setUser }) {
             />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading}
-          >
+          <button type='submit' className='btn btn-primary w-100' disabled={loading}>
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        {message && <p className="text-center text-success mt-3">{message}</p>}
-        {error && <p className="text-center text-danger mt-3">{error}</p>}
+        {message && <p className='text-center text-success mt-3'>{message}</p>}
+        {error && <p className='text-center text-danger mt-3'>{error}</p>}
 
-        <p className="text-center mt-3">
+        <p className='text-center mt-3'>
           Don’t have an account?{" "}
-          <a href="/signup" className="text-primary">
+          <a href='/signup' className='text-primary'>
             Sign up here
           </a>
         </p>
-        <p className="text-center text-muted small">
-          By signing in, you agree to our <a href="#">Terms</a> and{" "}
-          <a href="#">Privacy Policy</a>.
+        <p className='text-center text-muted small'>
+          By signing in, you agree to our <a href='#'>Terms</a> and <a href='#'>Privacy Policy</a>.
         </p>
       </div>
     </div>

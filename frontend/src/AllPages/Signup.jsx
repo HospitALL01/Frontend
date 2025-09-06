@@ -1,5 +1,21 @@
+// src/AllPages/Signup.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+/**
+ * ছোট utils: ইমেইল-ভিত্তিক প্রোফাইল ম্যাপ সংরক্ষণ/রিড
+ * স্ট্রাকচার: { [emailLower]: { role, name, phone } }
+ */
+const loadProfileMap = () => {
+  try {
+    return JSON.parse(localStorage.getItem("profileByEmail") || "{}");
+  } catch {
+    return {};
+  }
+};
+const saveProfileMap = (map) => {
+  localStorage.setItem("profileByEmail", JSON.stringify(map));
+};
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -125,6 +141,16 @@ export default function Signup() {
         throw new Error(msg);
       }
 
+      // ✅ লোকালি ইমেইল-প্রোফাইল ম্যাপ সেভ (Doctor/Patient উভয়েই; DoctorJoinForm Doctor থেকে ইউজ করবে)
+      const key = email.trim().toLowerCase();
+      const map = loadProfileMap();
+      map[key] = {
+        role,
+        name: fullname.trim(),
+        phone: phone.trim(),
+      };
+      saveProfileMap(map);
+
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 900);
     } catch (err) {
@@ -225,7 +251,6 @@ export default function Signup() {
                 maxLength={11}
                 required
               />
-              {/* <small className='text-muted'>Must start with 01 and be exactly 11 digits.</small> */}
             </div>
           )}
 
