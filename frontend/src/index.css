@@ -5,14 +5,19 @@
 /* General Body Styles */
 body {
   /* Using a modern, clean font stack */
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f7f9; /* Light gray-blue for a soft look */
   color: #343a40;
 }
 
 /* Enhanced Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
   font-weight: 700; /* Bold headings */
   color: #002855; /* Dark blue for headings */
 }
@@ -99,13 +104,15 @@ p {
 }
 
 /* --- Doctor Card (AppointmentBooking & Profile) --- */
-.doctor-card, .doctor-profile-card {
+.doctor-card,
+.doctor-profile-card {
   border-radius: 16px !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   background-color: #fff;
 }
-.doctor-card:hover, .doctor-profile-card:hover {
+.doctor-card:hover,
+.doctor-profile-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
 }
@@ -375,7 +382,7 @@ p {
 
 .about-header h1 {
   /* Overrides the default dark blue for the header */
-  color: white; 
+  color: white;
   text-shadow: 1px 2px 4px rgba(0, 40, 85, 0.3);
 }
 
@@ -418,7 +425,7 @@ p {
   font-size: 1.1rem;
 }
 .benefits-list li::before {
-  content: '✔';
+  content: "✔";
   position: absolute;
   left: 0;
   color: #0d6efd;
@@ -432,14 +439,14 @@ p {
 .hero-section-new {
   position: relative;
   padding: 8rem 0;
-  background-image: url('https://images.unsplash.com/photo-1550831107-1553da8c8464?q=80&w=1974&auto=format&fit=crop'); /* Placeholder doctor image */
+  background-image: url("https://images.unsplash.com/photo-1550831107-1553da8c8464?q=80&w=1974&auto=format&fit=crop"); /* Placeholder doctor image */
   background-size: cover;
   background-position: center;
 }
 
 /* Adds a white overlay to make text more readable */
 .hero-section-new::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -580,11 +587,11 @@ p {
 
 /* Light green color for the footer brand title */
 .text-brand-green-light {
-  color: red; 
+  color: red;
 }
 /* --- Purple Appointment Banner --- */
 .appointment-banner {
-  background-color: rgb(21, 143, 192); 
+  background-color: rgb(21, 143, 192);
   padding: 2.5rem 0;
   color: white;
 }
@@ -626,7 +633,7 @@ p {
 }
 
 .appointment-banner .emergency-link:hover {
-  color:red; /* The brand's green color on hover */
+  color: red; /* The brand's green color on hover */
 }
 /* =================================================================== */
 /*                       NEW STYLES FOR BLOG PAGE                      */
@@ -642,13 +649,13 @@ p {
 
 /* Adds a dark overlay to make white text readable on any image */
 .blogs-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Ensures content is above the overlay */
@@ -657,7 +664,8 @@ p {
   z-index: 2;
 }
 
-.blogs-header h1, .blogs-header p {
+.blogs-header h1,
+.blogs-header p {
   color: white;
 }
 
@@ -672,7 +680,7 @@ p {
   border: none;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
 }
 
@@ -702,16 +710,19 @@ p {
 }
 
 .blog-detail-header::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
   border-radius: 0 0 30px 30px;
 }
 
 .blog-detail-header h1 {
   color: white;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 /* --- Blog Detail Content & Sidebar --- */
@@ -750,7 +761,7 @@ p {
 
 /* This creates the decorative line below the heading */
 .section-heading::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -15px; /* Position the line below the text */
   left: 50%; /* Center the line */
@@ -759,4 +770,19 @@ p {
   height: 5px; /* Thickness of the line */
   background: linear-gradient(90deg, #00c6ff, #0072ff); /* Blue gradient */
   border-radius: 3px;
+}
+
+/* Hover effect on the entire Account section */
+.account-card {
+  transition: transform 0.3s ease, border 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.account-card:hover {
+  transform: translateY(-5px); /* Move the whole card up slightly */
+  border: 2px solid red; /* Red border on hover */
+}
+
+/* Hover effect on the Account button text */
+.account-btn:hover {
+  text-decoration: underline; /* Underline the text on hover */
 }

@@ -1,103 +1,161 @@
-// src/AllPages/AdminDashboard.jsx
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Table,
-  Navbar,
-  Nav,
-} from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
+import "../index.css";
 
 export default function AdminDashboard() {
+  const [doctorData, setDoctorData] = useState(null); // Initialize as null for a single doctor object
+  const [showDoctorName, setShowDoctorName] = useState(false); // Flag to toggle doctor name visibility
+  const [showDoctorInfo, setShowDoctorInfo] = useState(false); // Flag to toggle doctor info visibility
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // Store the selected doctor's details
+
+  // Fetch doctor's data from localStorage
+  useEffect(() => {
+    const storedDoctorData = localStorage.getItem("doctorData"); // Get doctor data from localStorage
+
+    if (storedDoctorData) {
+      const parsedData = JSON.parse(storedDoctorData); // Parse the data from JSON string
+      setDoctorData(parsedData); // Save the data in the state
+      console.log("Fetched doctor data: ", parsedData); // Log to ensure correct data is fetched
+    } else {
+      console.log("No doctor data found in localStorage");
+    }
+  }, []); // Run once on mount
+
+  // Toggle visibility of doctor's name
+  const handleAccountClick = () => {
+    setShowDoctorName((prevState) => !prevState); // Toggle the visibility of the doctor's name
+  };
+
+  // Handle doctor's name click to show detailed information
+  const handleDoctorClick = () => {
+    setSelectedDoctor(doctorData); // Set the selected doctor to the single doctor object
+    setShowDoctorInfo(true); // Show detailed info
+  };
+
+  // Handle back click to hide doctor details
+  const handleBackClick = () => {
+    setShowDoctorInfo(false); // Hide doctor details
+    setSelectedDoctor(null); // Reset selected doctor
+    setShowDoctorName(false); // Reset doctor name visibility
+  };
+
   return (
     <div>
-      <Navbar bg="primary" variant="dark" expand="lg">
-        <Container>
-          <Navbar.Brand href="#">🏥 HospitALL Admin</Navbar.Brand>
-          <Nav className="ms-auto">
-            <Nav.Link href="#">View Site</Nav.Link>
-            <Button variant="light" size="sm">
-              Log Out
-            </Button>
-          </Nav>
-        </Container>
-      </Navbar>
-
-      <Container className="my-4">
-        <Row className="g-3">
-          {[
-            { name: "Recent Posts", icon: "📝" },
-            { name: "Products", icon: "📦" },
-            { name: "Coupons", icon: "🎟️" },
-            { name: "Users", icon: "👥" },
-            { name: "Settings", icon: "⚙️" },
-            { name: "Account", icon: "👤" },
-          ].map((item, index) => (
-            <Col key={index} md={2}>
-              <Card className="shadow-sm text-center h-100 border-0">
-                <Card.Body>
-                  <div style={{ fontSize: "2rem" }}>{item.icon}</div>
-                  <Card.Title className="mt-2">{item.name}</Card.Title>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+      <Container className='my-4'>
+        <Row className='g-3'>
+          <Col md={2}>
+            <Card
+              className='shadow-sm text-center h-100 border-0 account-card'
+              style={{ cursor: "pointer" }} // Show pointer cursor
+              onClick={handleAccountClick} // Handle click on Account card
+            >
+              <Card.Body>
+                <div style={{ fontSize: "2rem" }}>👤</div>
+                <Card.Title className='mt-2'>Account</Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
         </Row>
-      </Container>
 
-      <Container>
-        <Card className="shadow-sm border-0">
-          <Card.Header className="bg-primary text-white">
-            <h5 className="mb-0">Products</h5>
-          </Card.Header>
-          <Card.Body>
-            <Button variant="success" size="sm" className="me-2">
-              + Add Product
-            </Button>
-            <Button variant="outline-secondary" size="sm" className="me-2">
-              Import
-            </Button>
-            <Button variant="outline-secondary" size="sm">
-              Export
-            </Button>
+        {/* Display Doctor's Name if doctorData is available and Account card is clicked */}
+        {showDoctorName && !showDoctorInfo && doctorData && (
+          <Container>
+            <Card className='shadow-sm border-0'>
+              <Card.Header className='bg-primary text-white'>
+                <h5 className='mb-0'>Doctor Information</h5>
+              </Card.Header>
+              <Card.Body>
+                <Table striped bordered hover responsive className='mt-3'>
+                  <thead className='table-primary'>
+                    <tr>
+                      <th>Doctor's Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Display doctor name */}
+                    <tr
+                      onClick={handleDoctorClick} // Show detailed info on click
+                      style={{ cursor: "pointer" }} // Make rows clickable
+                    >
+                      <td>{doctorData.doctorName}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Card.Body>
+            </Card>
+          </Container>
+        )}
 
-            <Table striped bordered hover responsive className="mt-3">
-              <thead className="table-primary">
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Stock</th>
-                  <th>Price</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>🩺 Product A</td>
-                  <td>
-                    <span className="text-success">In stock</span>
-                  </td>
-                  <td>$50.00</td>
-                  <td>2025-09-03</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>💊 Medicine B</td>
-                  <td>
-                    <span className="text-danger">Out of stock</span>
-                  </td>
-                  <td>$30.00</td>
-                  <td>2025-09-02</td>
-                </tr>
-              </tbody>
-            </Table>
-          </Card.Body>
-        </Card>
+        {/* Show Doctor's Details when the doctor name is clicked */}
+        {showDoctorInfo && selectedDoctor && (
+          <Container>
+            <Card className='shadow-sm border-0'>
+              <Card.Header className='bg-primary text-white'>
+                <h5 className='mb-0'>Doctor Details</h5>
+              </Card.Header>
+              <Card.Body>
+                <Table striped bordered hover responsive className='mt-3'>
+                  <thead className='table-primary'>
+                    <tr>
+                      <th>Field</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Display selected doctor's detailed information */}
+                    <tr>
+                      <td>Doctor's Name</td>
+                      <td>{selectedDoctor.doctorName}</td>
+                    </tr>
+                    <tr>
+                      <td>Gender</td>
+                      <td>{selectedDoctor.gender}</td>
+                    </tr>
+                    <tr>
+                      <td>Specialization</td>
+                      <td>{selectedDoctor.specialization}</td>
+                    </tr>
+                    <tr>
+                      <td>License Number</td>
+                      <td>{selectedDoctor.licenseNumber}</td>
+                    </tr>
+                    <tr>
+                      <td>License Issue Date</td>
+                      <td>{selectedDoctor.licenseIssueDate}</td>
+                    </tr>
+                    <tr>
+                      <td>Hospital Name</td>
+                      <td>{selectedDoctor.hospitalName}</td>
+                    </tr>
+                    <tr>
+                      <td>Years of Experience</td>
+                      <td>{selectedDoctor.yearsOfExperience}</td>
+                    </tr>
+                    <tr>
+                      <td>Phone</td>
+                      <td>{selectedDoctor.phone}</td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>{selectedDoctor.email}</td>
+                    </tr>
+                    <tr>
+                      <td>Current Position</td>
+                      <td>{selectedDoctor.currentPosition}</td>
+                    </tr>
+                    <tr>
+                      <td>Previous Positions</td>
+                      <td>{selectedDoctor.previousPositions}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+                <Button variant='secondary' onClick={handleBackClick}>
+                  Back
+                </Button>
+              </Card.Body>
+            </Card>
+          </Container>
+        )}
       </Container>
     </div>
   );
