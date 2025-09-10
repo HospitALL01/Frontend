@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom"; // Use useNavigate for navigation
 import { FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaStar } from "react-icons/fa";
 import "../index.css";
 
@@ -8,6 +8,7 @@ const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 export default function DoctorProfile() {
   const { email } = useParams(); // Fetching the doctor email from the URL
   const location = useLocation();
+  const navigate = useNavigate(); // Use navigate for redirecting
   const doctorFromState = location.state?.doctor;
 
   const [doctorData, setDoctorData] = useState(doctorFromState || null); // Use state data if available
@@ -40,6 +41,11 @@ export default function DoctorProfile() {
       fetchDoctorData();
     }
   }, [doctorFromState, email]);
+
+  const handleBookAppointment = () => {
+    // Redirect to the booking page and pass the doctor data to it
+    navigate("/book-now", { state: { doctor: doctorData } });
+  };
 
   if (error) {
     return (
@@ -127,6 +133,15 @@ export default function DoctorProfile() {
                 </p>
               </li>
             </ul>
+          </div>
+
+          {/* Book Appointment Button */}
+          <div className='card shadow-sm border-0 p-4 mb-4 profile-section-card'>
+            <div className='text-center'>
+              <button className='btn btn-success' onClick={handleBookAppointment}>
+                Book Appointment
+              </button>
+            </div>
           </div>
 
           {/* Patient Reviews */}
