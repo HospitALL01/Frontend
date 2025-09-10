@@ -30,7 +30,6 @@ export default function AppointmentBooking() {
     <div className='container py-5'>
       <div className='text-center mb-5'>
         <h1 className='fw-bold display-5'>Featured Doctors</h1>
-        <p className='lead text-muted'>Admin নির্বাচিত (Accepted) ডাক্তারদের মধ্য থেকে বুক করুন।</p>
       </div>
 
       <div className='row'>
