@@ -9,7 +9,7 @@ import Signup from "./AllPages/Signup.jsx";
 import AI from "./AllPages/AI.jsx";
 import AppointmentBooking from "./AllPages/AppointmentBooking.jsx";
 import HospitalPage from "./AllPages/Hospitals.jsx";
-import DoctorProfile from "./AllPages/DoctorProfile.jsx";
+import DoctorProfile from "./AllPages/DoctorProfile.jsx"; // Updated path to use email
 import BookingPage from "./AllPages/BookingPage.jsx";
 import EmergencyPage from "./AllPages/EmergencyPage.jsx";
 import AdminDashboard from "./AllPages/AdminDashboard.jsx";
@@ -64,7 +64,6 @@ export default function App() {
         <Route path='/about' element={<About />} />
         <Route path='/blogs' element={<Blogs />} />
         <Route path='/blogs/:id' element={<BlogDetailPage />} />
-        {/* ✅ 2. Add the new route for the "See More" page */}
         <Route path='/blogs/all' element={<AllBlogsPage />} />
         <Route path='/support' element={<Support />} />
 
@@ -77,7 +76,8 @@ export default function App() {
         <Route path='/find-doctors' element={<PatientRoute element={<AppointmentBooking />} />} />
         <Route path='/hospitals' element={<PatientRoute element={<HospitalPage />} />} />
         <Route path='/emergency' element={<PatientRoute element={<EmergencyPage />} />} />
-        <Route path='/doctor/:id' element={<PatientRoute element={<DoctorProfile user={user} />} />} />
+        {/* View Doctor Profile by Email */}
+        <Route path='/doctor/:email' element={<PatientRoute element={<DoctorProfile user={user} />} />} />
         <Route path='/book-now' element={<PatientRoute element={<BookingPage />} />} />
 
         {/* ✅ Doctor-only Routes */}
