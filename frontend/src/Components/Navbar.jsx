@@ -1,15 +1,24 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { FaHeart, FaUser } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Needed for dropdowns
 
 function Navbar({ user, onLogout }) {
+  const location = useLocation(); // Get current location (route)
   const role = localStorage.getItem("role");
 
+  // Handle click on hospital icon, only works for Public, Patient, and Doctor
+  const handleHospitalClick = (e) => {
+    if (role === "Admin") {
+      // Prevent routing for Admin users
+      e.preventDefault();
+    }
+  };
+
   // Render Navbar for Admin only on the /verification page
-  if (role === "Admin" && location === "/verification") {
+  if (role === "Admin" && location.pathname === "/verification") {
     return (
       <nav className='navbar navbar-expand-lg bg-white shadow-sm px-4'>
         <Link className='navbar-brand fw-bold text-primary d-flex align-items-center btn btn-link p-0' to='/'>
@@ -43,10 +52,13 @@ function Navbar({ user, onLogout }) {
   }
 
   // Default Navbar
-
   return (
     <nav className='navbar navbar-expand-lg bg-white shadow-sm px-4'>
-      <Link className='navbar-brand fw-bold text-primary d-flex align-items-center' to='/'>
+      <Link
+        className='navbar-brand fw-bold text-primary d-flex align-items-center'
+        to='/about' // Directing to the About Us page for all users except Admin
+        onClick={handleHospitalClick} // Add click handler to hospital icon
+      >
         <FaHeart className='me-2 text-primary' />
         HospitALL
       </Link>

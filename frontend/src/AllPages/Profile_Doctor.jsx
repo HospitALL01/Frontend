@@ -35,8 +35,8 @@ const DoctorJoinForm = () => {
   const [step, setStep] = useState(0);
   const [editingMode, setEditingMode] = useState(false);
   const [existingEmail, setExistingEmail] = useState(null);
-  const [lockIdentity, setLockIdentity] = useState(false); // Identity lock state
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false); // Track if the form has been submitted
+  const [lockIdentity, setLockIdentity] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const mountedRef = useRef(false);
 
@@ -81,7 +81,7 @@ const DoctorJoinForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if ((name === "doctorName" || name === "email" || name === "phone") && lockIdentity) {
-      return; // Prevent change if identity is locked
+      return;
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -97,6 +97,23 @@ const DoctorJoinForm = () => {
     !formData.phone ||
     !formData.email;
 
+  /** --------- Save doctorData to localStorage (for Admin quick view) ---------- */
+  const mirrorToDoctorData = (payload) => {
+    try {
+      localStorage.setItem("doctorData", JSON.stringify(payload));
+      // সাথে সাথে Admin cache-এও আপডেট পুশ করলে রিফ্রেশ ছাড়াই সঙ্গে সঙ্গে শো করবে
+      const adminCacheKey = "adminDoctorListCache";
+      const cacheRaw = localStorage.getItem(adminCacheKey);
+      const list = cacheRaw ? JSON.parse(cacheRaw) : [];
+      const idx = list.findIndex((d) => (d.email || "").toLowerCase() === (payload.email || "").toLowerCase());
+      if (idx >= 0) list[idx] = payload;
+      else list.unshift(payload);
+      localStorage.setItem(adminCacheKey, JSON.stringify(list));
+    } catch {
+      // ignore
+    }
+  };
+
   /** --------- First-time Submit (CREATE or UPDATE) ---------- */
   const handleSubmit = async () => {
     if (invalidRequired()) {
@@ -105,29 +122,43 @@ const DoctorJoinForm = () => {
     }
 
     try {
-      const url = existingEmail
-        ? `${API_BASE}/api/doctor-info/${existingEmail}` // Update existing record by email
-        : `${API_BASE}/api/doctor-info`; // Create new record
+      const url = existingEmail ? `${API_BASE}/api/doctor-info/${existingEmail}` : `${API_BASE}/api/doctor-info`;
 
-      const method = existingEmail ? "PUT" : "POST"; // Use PUT if updating, POST if creating
+      const method = existingEmail ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData), // Send all form data
+        body: JSON.stringify(formData),
       });
 
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.message || "Failed to submit the form");
 
-      const createdEmail = formData.email.toLowerCase().trim();
+      const createdEmail = (formData.email || "").toLowerCase().trim();
       setExistingEmail(createdEmail);
-      setLockIdentity(true); // Lock identity after submission
+      setLockIdentity(true);
       setEditingMode(false);
       setFormData((prev) => ({ ...prev, errorMessage: "" }));
-      setIsFormSubmitted(true); // Mark the form as submitted
+      setIsFormSubmitted(true);
 
-      alert("Doctor information submitted successfully!");
+      // ✅ লোকাল doctorData আপডেট — Admin Dashboard দ্রুত পেয়ে যাবে
+      mirrorToDoctorData({
+        doctorName: formData.doctorName,
+        gender: formData.gender,
+        nationality: formData.nationality,
+        specialization: formData.specialization,
+        licenseNumber: formData.licenseNumber,
+        licenseIssueDate: formData.licenseIssueDate,
+        hospitalName: formData.hospitalName,
+        yearsOfExperience: formData.yearsOfExperience,
+        phone: formData.phone,
+        email: createdEmail,
+        currentPosition: formData.currentPosition,
+        previousPositions: formData.previousPositions,
+      });
+
+      alert(existingEmail ? "Doctor information updated successfully!" : "Doctor information submitted successfully!");
     } catch (err) {
       setFormData((prev) => ({ ...prev, errorMessage: err?.message || "There was an error submitting the form." }));
     }
@@ -136,10 +167,10 @@ const DoctorJoinForm = () => {
   /** --------- Update flow (identity fields excluded) ---------- */
   const onUpdateClick = () => {
     if (!editingMode) {
-      setEditingMode(true); // Enable edit mode
+      setEditingMode(true);
       return;
     }
-    handleSubmit(); // Save update when clicked again (handles both POST and PUT)
+    handleSubmit();
   };
 
   /** --------- Stepper navigation ---------- */
@@ -151,26 +182,26 @@ const DoctorJoinForm = () => {
   };
 
   /** --------- UI ---------- */
-  const hasCreated = !!existingEmail; // Check if doctor profile exists by email
+  const hasCreated = !!existingEmail;
   const primaryCtaLabel = hasCreated
     ? isFormSubmitted
-      ? "Update" // After submission, show Update button
+      ? "Update"
       : editingMode
-      ? "Save Update" // If editing mode, show Save Update button
-      : "Update" // If profile exists, show Update button
+      ? "Save Update"
+      : "Update"
     : step === 2
-    ? "Submit" // On Step 3, show Submit button
-    : "Next"; // On Step 1 and Step 2, show Next button
+    ? "Submit"
+    : "Next";
 
   const primaryOnClick = hasCreated
     ? isFormSubmitted
-      ? onUpdateClick // After submission, update on click
+      ? onUpdateClick
       : step === 2
-      ? handleSubmit // On final step, submit the form
-      : nextStep // On Step 1 and Step 2, go to next step
+      ? handleSubmit
+      : nextStep
     : step === 2
-    ? handleSubmit // On Step 3, submit the form
-    : nextStep; // On Step 1 and Step 2, go to next step
+    ? handleSubmit
+    : nextStep;
 
   return (
     <Container className='my-5' maxWidth='md'>
@@ -209,8 +240,8 @@ const DoctorJoinForm = () => {
                 value={formData.doctorName}
                 onChange={handleChange}
                 required
-                disabled={true} // Always disabled
-                InputProps={{ readOnly: true }} // Always read-only
+                disabled={true}
+                InputProps={{ readOnly: true }}
                 sx={{ borderRadius: "8px" }}
               />
               <Grid container spacing={2}>
@@ -344,7 +375,7 @@ const DoctorJoinForm = () => {
                 />
               </Grid>
 
-              {/* Phone (identity – always locked after creation) */}
+              {/* Phone */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   label='Phone Number'
@@ -354,12 +385,13 @@ const DoctorJoinForm = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  disabled={true} // Always disabled
-                  InputProps={{ readOnly: true }} // Always read-only
+                  disabled={true}
+                  InputProps={{ readOnly: true }}
                   sx={{ borderRadius: "8px" }}
                 />
               </Grid>
-              {/* Email (identity – always locked after creation) */}
+
+              {/* Email */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   label='Email Address'
@@ -369,8 +401,8 @@ const DoctorJoinForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  disabled={true} // Always disabled
-                  InputProps={{ readOnly: true }} // Always read-only
+                  disabled={true}
+                  InputProps={{ readOnly: true }}
                   sx={{ borderRadius: "8px" }}
                 />
               </Grid>
