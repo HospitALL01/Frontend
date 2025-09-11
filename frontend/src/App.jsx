@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
-// Components
+
+// ✅ 1. Import the ToastContainer and its CSS
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 import Navbar from "./Components/Navbar.jsx";
 import Home from "./AllPages/Home.jsx";
 import Login from "./AllPages/Login.jsx";
@@ -21,7 +26,10 @@ import Blogs from "./AllPages/Blogs.jsx";
 import Support from "./AllPages/Support.jsx";
 import BlogDetailPage from "./AllPages/BlogDetailPage.jsx";
 
+
+
 // ✅ 1. IMPORT the new 'AllBlogsPage' component
+
 import AllBlogsPage from "./AllPages/AllBlogsPage.jsx";
 
 // --- Helpers ---
@@ -58,6 +66,45 @@ export default function App() {
   return (
     <div>
       <Navbar user={user} onLogout={handleLogout} />
+
+
+      {/* ✅ 2. Add the ToastContainer component here, right below the Navbar */}
+      <ToastContainer
+        position="top-right"
+        autoClose={4000} // Close notifications after 4 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+      <Routes>
+        {/* ✅ Public routes (guest can access without login) */}
+        <Route path="/" element={<About />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/:id" element={<BlogDetailPage />} />
+        <Route path="/blogs/all" element={<AllBlogsPage />} />
+        <Route path="/support" element={<Support />} />
+
+        {/* ✅ Auth routes */}
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* ✅ Patient-only routes */}
+        <Route
+          path="/home"
+          element={<PatientRoute element={<Home user={user} />} />}
+        />
+        <Route
+          path="/find-doctors"
+          element={<PatientRoute element={<AppointmentBooking />} />}
+        />
+
       <Routes>
         {/* ✅ Public Routes (guest can access without login) */}
         <Route path='/' element={<About />} />
@@ -81,6 +128,7 @@ export default function App() {
         <Route path='/book-now' element={<PatientRoute element={<BookingPage />} />} />
 
         {/* ✅ Doctor-only Routes */}
+
         <Route
           path='/appointments'
           element={<DoctorRoute element={<div className='container py-5'>Doctor Appointments Page</div>} />}
