@@ -13,6 +13,9 @@ export default function DoctorProfile() {
 
   const [doctorData, setDoctorData] = useState(doctorFromState || null); // Use state data if available
   const [error, setError] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     if (!doctorFromState) {
@@ -29,6 +32,7 @@ export default function DoctorProfile() {
           if (response.ok) {
             const data = await response.json();
             setDoctorData(data.data);
+            setReviews(data.data.reviews || []); // Fetch reviews as well
           } else {
             const errorData = await response.json();
             setError(errorData?.message || "Failed to fetch doctor data.");
@@ -45,6 +49,50 @@ export default function DoctorProfile() {
   const handleBookAppointment = () => {
     // Redirect to the booking page and pass the doctor data to it
     navigate("/book-now", { state: { doctor: doctorData } });
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!doctorData?.email) {
+      alert("Doctor email is not available.");
+      return;
+    }
+
+    const reviewData = {
+      rating: rating,
+      comment: comment,
+    };
+
+    console.log("Submitting review for doctor: ", reviewData);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/doctor-info/${doctorData.email}/review`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // Add the review to the state and update the UI
+        setReviews([
+          ...reviews,
+          { rating, comment, name: localStorage.getItem("user_name"), date: new Date().toLocaleDateString() },
+        ]);
+        setRating(0);
+        setComment("");
+        alert(data.message); // Show success message
+      } else {
+        alert(data.message || "Error submitting review.");
+      }
+    } catch (error) {
+      alert("An error occurred while submitting your review.");
+      console.error("Error submitting review:", error);
+    }
   };
 
   if (error) {
@@ -149,13 +197,17 @@ export default function DoctorProfile() {
             <h4 className='fw-bold mb-3'>Patient Reviews</h4>
             <div className='mb-4 p-3 bg-light border rounded'>
               <h5 className='mb-3'>Leave a Review</h5>
-              <form>
+              <form onSubmit={handleReviewSubmit}>
                 {/* Rating and comment form */}
                 <div className='mb-3'>
                   <label className='form-label fw-semibold'>Your Rating</label>
                   <div className='star-rating'>
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <FaStar key={star} className={`star ${star <= (doctorData.rating || 0) ? "active" : ""}`} />
+                      <FaStar
+                        key={star}
+                        className={`star ${star <= rating ? "active" : ""}`}
+                        onClick={() => setRating(star)}
+                      />
                     ))}
                   </div>
                 </div>
@@ -167,7 +219,9 @@ export default function DoctorProfile() {
                     id='comment'
                     className='form-control'
                     rows='3'
-                    placeholder='Share your experience...'></textarea>
+                    placeholder='Share your experience...'
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}></textarea>
                 </div>
                 <button type='submit' className='btn btn-primary'>
                   Submit Review
@@ -176,7 +230,7 @@ export default function DoctorProfile() {
             </div>
 
             {/* Reviews Display */}
-            {doctorData.reviews?.map((review, index) => (
+            {reviews.map((review, index) => (
               <div key={index} className='review-item mb-3'>
                 <div className='d-flex justify-content-between align-items-center'>
                   <p className='fw-semibold mb-0'>{review.name}</p>
