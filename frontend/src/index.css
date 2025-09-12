@@ -800,3 +800,12 @@ p {
 .driver-details a:hover {
   text-decoration: underline;
 }
+
+.payment-logo-wrapper.selected {
+  border: 2px solid #700000; /* Blue border for selected item */
+  /* background-color: #f0f8ff; */
+}
+
+.unavailable-message {
+  color: red;
+}
