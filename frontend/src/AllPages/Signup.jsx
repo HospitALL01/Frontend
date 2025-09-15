@@ -2,10 +2,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/**
- * ছোট utils: ইমেইল-ভিত্তিক প্রোফাইল ম্যাপ সংরক্ষণ/রিড
- * স্ট্রাকচার: { [emailLower]: { role, name, phone } }
- */
 const loadProfileMap = () => {
   try {
     return JSON.parse(localStorage.getItem("profileByEmail") || "{}");
@@ -34,7 +30,8 @@ export default function Signup() {
 
   const API_BASE = "http://127.0.0.1:8000/api";
 
-  const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val).toLowerCase());
+  const isValidEmail = (val) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val).toLowerCase());
 
   // ✅ Bangladesh phone: must start with 01 and total 11 digits
   const isValidBDPhone = (val) => /^01\d{9}$/.test(val);
@@ -91,7 +88,6 @@ export default function Signup() {
       return;
     }
 
-    // ✅ Patient/Doctor উভয়ের জন্য ফোন আবশ্যক এবং BD ফরম্যাট চেক
     if (role === "Patient" || role === "Doctor") {
       if (!phone.trim()) {
         setWarning("Please enter your phone number.");
@@ -141,7 +137,6 @@ export default function Signup() {
         throw new Error(msg);
       }
 
-      // ✅ লোকালি ইমেইল-প্রোফাইল ম্যাপ সেভ (Doctor/Patient উভয়েই; DoctorJoinForm Doctor থেকে ইউজ করবে)
       const key = email.trim().toLowerCase();
       const map = loadProfileMap();
       map[key] = {
@@ -171,41 +166,48 @@ export default function Signup() {
 
   return (
     <div
-      className='min-vh-100 bg-light d-flex justify-content-center align-items-start'
-      style={{ paddingTop: "40px", paddingBottom: "40px" }}>
-      <div className='card shadow p-4' style={{ width: "400px", borderRadius: "15px" }}>
+      className="min-vh-100 bg-light d-flex justify-content-center align-items-start"
+      style={{ paddingTop: "40px", paddingBottom: "40px" }}
+    >
+      <div
+        className="card shadow p-4"
+        style={{ width: "400px", borderRadius: "15px" }}
+      >
         {/* Logo */}
-        <div className='text-center mb-4'>
+        <div className="text-center mb-4">
           <div
-            className='border rounded-circle d-flex justify-content-center align-items-center mx-auto'
-            style={{ width: "60px", height: "60px" }}>
-            <span className='text-primary fs-3'>❤</span>
+            className="border rounded-circle d-flex justify-content-center align-items-center mx-auto"
+            style={{ width: "60px", height: "60px" }}
+          >
+            <span className="text-primary fs-3">❤</span>
           </div>
-          <h4 className='mt-2'>HospitALL</h4>
+          <h4 className="mt-2">HospitALL</h4>
         </div>
 
-        <h5 className='text-center fw-bold'>Create Account</h5>
-        <p className='text-center text-muted mb-3'>Join our healthcare platform</p>
+        <h5 className="text-center fw-bold">Create Account</h5>
+        <p className="text-center text-muted mb-3">
+          Join our healthcare platform
+        </p>
 
         {warning && (
-          <div className='alert alert-danger py-2' role='alert'>
+          <div className="alert alert-danger py-2" role="alert">
             {warning}
           </div>
         )}
         {success && (
-          <div className='alert alert-success py-2' role='alert'>
+          <div className="alert alert-success py-2" role="alert">
             {success}
           </div>
         )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
-          <div className='mb-3'>
-            <label className='form-label'>Full Name</label>
+          <div className="mb-3">
+            <label className="form-label">Full Name</label>
             <input
-              type='text'
-              className='form-control'
-              placeholder='Enter your full name'
+              type="text"
+              className="form-control"
+              placeholder="Enter your full name"
               value={fullname}
               onChange={(e) => setName(e.target.value)}
               disabled={loading}
@@ -213,12 +215,12 @@ export default function Signup() {
             />
           </div>
 
-          <div className='mb-3'>
-            <label className='form-label'>Email</label>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
             <input
-              type='email'
-              className='form-control'
-              placeholder='Enter your email'
+              type="email"
+              className="form-control"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
@@ -226,9 +228,14 @@ export default function Signup() {
             />
           </div>
 
-          <div className='mb-3'>
-            <label className='form-label'>I am a</label>
-            <select className='form-select' value={role} onChange={(e) => setRole(e.target.value)} disabled={loading}>
+          <div className="mb-3">
+            <label className="form-label">I am a</label>
+            <select
+              className="form-select"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              disabled={loading}
+            >
               <option>Patient</option>
               <option>Doctor</option>
               <option>Admin</option>
@@ -236,17 +243,17 @@ export default function Signup() {
           </div>
 
           {showPhone && (
-            <div className='mb-3'>
-              <label className='form-label'>Phone</label>
+            <div className="mb-3">
+              <label className="form-label">Phone</label>
               <input
-                type='tel'
-                className='form-control'
-                placeholder='01XXXXXXXXX'
+                type="tel"
+                className="form-control"
+                placeholder="01XXXXXXXXX"
                 value={phone}
                 onChange={handlePhoneChange}
                 disabled={loading}
-                inputMode='numeric'
-                pattern='01[0-9]{9}'
+                inputMode="numeric"
+                pattern="01[0-9]{9}"
                 minLength={11}
                 maxLength={11}
                 required
@@ -254,12 +261,12 @@ export default function Signup() {
             </div>
           )}
 
-          <div className='mb-3'>
-            <label className='form-label'>Password</label>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
             <input
-              type='password'
-              className='form-control'
-              placeholder='Create a password (min 6 chars)'
+              type="password"
+              className="form-control"
+              placeholder="Create a password (min 6 chars)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
@@ -268,13 +275,17 @@ export default function Signup() {
             />
           </div>
 
-          <button type='submit' className='btn btn-primary w-100' disabled={loading}>
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={loading}
+          >
             {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
 
-        <p className='text-center mt-3 mb-0'>
-          Already have an account? <a href='/login'>Sign in here</a>
+        <p className="text-center mt-3 mb-0">
+          Already have an account? <a href="/login">Sign in here</a>
         </p>
       </div>
     </div>

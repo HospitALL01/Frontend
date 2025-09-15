@@ -5,7 +5,8 @@
 /* General Body Styles */
 body {
   /* Using a modern, clean font stack */
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f7f9; /* Light gray-blue for a soft look */
   color: #343a40;
 }
@@ -785,4 +786,16 @@ p {
 /* Hover effect on the Account button text */
 .account-btn:hover {
   text-decoration: underline; /* Underline the text on hover */
+}
+
+/* In your CSS file (e.g., styles.css) */
+@media (max-width: 600px) {
+  .chat-window {
+    width: 280px; /* Smaller width on mobile */
+    height: 400px; /* Adjust height for mobile */
+  }
+  .chat-widget-btn {
+    padding: 12px; /* Smaller button for mobile */
+    font-size: 20px; /* Smaller icon for mobile */
+  }
 }

@@ -17,7 +17,6 @@ import {
 } from "date-fns";
 import "../index.css";
 
-// ✅ 1. CREATE COMPONENTS FOR BANGLADESHI PAYMENT METHOD LOGOS
 const BkashLogo = () => (
   <div className="payment-logo-wrapper">
     <span className="payment-logo-text bkash">bKash</span>

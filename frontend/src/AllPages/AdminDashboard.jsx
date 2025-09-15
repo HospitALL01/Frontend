@@ -3,10 +3,10 @@ import { Container, Row, Col, Card, Table, Button } from "react-bootstrap";
 import "../index.css";
 
 export default function AdminDashboard() {
-  const [doctorData, setDoctorData] = useState(null); // Initialize as null for a single doctor object
-  const [showDoctorName, setShowDoctorName] = useState(false); // Flag to toggle doctor name visibility
-  const [showDoctorInfo, setShowDoctorInfo] = useState(false); // Flag to toggle doctor info visibility
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // Store the selected doctor's details
+  const [doctorData, setDoctorData] = useState(null);
+  const [showDoctorName, setShowDoctorName] = useState(false);
+  const [showDoctorInfo, setShowDoctorInfo] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
   // Fetch doctor's data from localStorage
   useEffect(() => {
@@ -41,17 +41,17 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <Container className='my-4'>
-        <Row className='g-3'>
+      <Container className="my-4">
+        <Row className="g-3">
           <Col md={2}>
             <Card
-              className='shadow-sm text-center h-100 border-0 account-card'
+              className="shadow-sm text-center h-100 border-0 account-card"
               style={{ cursor: "pointer" }} // Show pointer cursor
               onClick={handleAccountClick} // Handle click on Account card
             >
               <Card.Body>
                 <div style={{ fontSize: "2rem" }}>👤</div>
-                <Card.Title className='mt-2'>Account</Card.Title>
+                <Card.Title className="mt-2">Account</Card.Title>
               </Card.Body>
             </Card>
           </Col>
@@ -60,13 +60,13 @@ export default function AdminDashboard() {
         {/* Display Doctor's Name if doctorData is available and Account card is clicked */}
         {showDoctorName && !showDoctorInfo && doctorData && (
           <Container>
-            <Card className='shadow-sm border-0'>
-              <Card.Header className='bg-primary text-white'>
-                <h5 className='mb-0'>Doctor Information</h5>
+            <Card className="shadow-sm border-0">
+              <Card.Header className="bg-primary text-white">
+                <h5 className="mb-0">Doctor Information</h5>
               </Card.Header>
               <Card.Body>
-                <Table striped bordered hover responsive className='mt-3'>
-                  <thead className='table-primary'>
+                <Table striped bordered hover responsive className="mt-3">
+                  <thead className="table-primary">
                     <tr>
                       <th>Doctor's Name</th>
                     </tr>
@@ -89,13 +89,13 @@ export default function AdminDashboard() {
         {/* Show Doctor's Details when the doctor name is clicked */}
         {showDoctorInfo && selectedDoctor && (
           <Container>
-            <Card className='shadow-sm border-0'>
-              <Card.Header className='bg-primary text-white'>
-                <h5 className='mb-0'>Doctor Details</h5>
+            <Card className="shadow-sm border-0">
+              <Card.Header className="bg-primary text-white">
+                <h5 className="mb-0">Doctor Details</h5>
               </Card.Header>
               <Card.Body>
-                <Table striped bordered hover responsive className='mt-3'>
-                  <thead className='table-primary'>
+                <Table striped bordered hover responsive className="mt-3">
+                  <thead className="table-primary">
                     <tr>
                       <th>Field</th>
                       <th>Details</th>
@@ -149,7 +149,7 @@ export default function AdminDashboard() {
                     </tr>
                   </tbody>
                 </Table>
-                <Button variant='secondary' onClick={handleBackClick}>
+                <Button variant="secondary" onClick={handleBackClick}>
                   Back
                 </Button>
               </Card.Body>
