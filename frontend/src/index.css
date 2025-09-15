@@ -5,8 +5,7 @@
 /* General Body Styles */
 body {
   /* Using a modern, clean font stack */
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f7f9; /* Light gray-blue for a soft look */
   color: #343a40;
 }
@@ -798,6 +797,7 @@ p {
     padding: 12px; /* Smaller button for mobile */
     font-size: 20px; /* Smaller icon for mobile */
   }
+}
 /* --- New styles for Booked Status --- */
 .ambulance-status.booked {
   background-color: #0d6efd; /* Bootstrap primary blue */
