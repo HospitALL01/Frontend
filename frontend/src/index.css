@@ -798,4 +798,26 @@ p {
     padding: 12px; /* Smaller button for mobile */
     font-size: 20px; /* Smaller icon for mobile */
   }
+/* --- New styles for Booked Status --- */
+.ambulance-status.booked {
+  background-color: #0d6efd; /* Bootstrap primary blue */
+}
+
+.driver-details a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #0d6efd;
+}
+
+.driver-details a:hover {
+  text-decoration: underline;
+}
+
+.payment-logo-wrapper.selected {
+  border: 2px solid #700000; /* Blue border for selected item */
+  /* background-color: #f0f8ff; */
+}
+
+.unavailable-message {
+  color: red;
 }
