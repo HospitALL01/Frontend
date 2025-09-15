@@ -786,6 +786,18 @@ p {
 .account-btn:hover {
   text-decoration: underline; /* Underline the text on hover */
 }
+
+/* In your CSS file (e.g., styles.css) */
+@media (max-width: 600px) {
+  .chat-window {
+    width: 280px; /* Smaller width on mobile */
+    height: 400px; /* Adjust height for mobile */
+  }
+  .chat-widget-btn {
+    padding: 12px; /* Smaller button for mobile */
+    font-size: 20px; /* Smaller icon for mobile */
+  }
+}
 /* --- New styles for Booked Status --- */
 .ambulance-status.booked {
   background-color: #0d6efd; /* Bootstrap primary blue */
