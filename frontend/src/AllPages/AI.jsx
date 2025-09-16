@@ -48,8 +48,6 @@ async function sendMessage({
     const res = await fetch(`${API_BASE}/api/chatbot`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // JWT দরকার হলে আনকমেন্ট করো:
-      // ...(localStorage.getItem("token") ? { Authorization:`Bearer ${localStorage.getItem("token")}` } : {}),
       body: JSON.stringify({ message: content, history }),
     });
 
@@ -127,7 +125,7 @@ export default function AI() {
         <div className="d-flex align-items-center gap-2">
           <div
             className="rounded-3 bg-success text-white d-inline-flex align-items-center justify-content-center"
-            style={{ width: 36, height: 36 }}
+            style={{ width: 40, height: 40 }}
           >
             <FaRobot />
           </div>
@@ -141,16 +139,22 @@ export default function AI() {
 
       <div className="row g-3">
         <div className="col-lg-7">
-          <div className="card border-0 shadow-sm" style={{ borderRadius: 16 }}>
+          <div className="card border-0 shadow-lg" style={{ borderRadius: 20 }}>
             <div
               ref={viewportRef}
               className="card-body p-3"
-              style={{ height: 360, overflowY: "auto", background: "#fbfcff" }}
+              style={{
+                height: 400,
+                overflowY: "auto",
+                background: "#f4f7f9",
+                borderRadius: 16,
+                padding: "20px",
+              }}
             >
               {messages.map((m) => (
                 <div
                   key={m.id}
-                  className={`d-flex mb-2 ${
+                  className={`d-flex mb-3 ${
                     m.role === "user" ? "justify-content-end" : ""
                   }`}
                 >
@@ -158,7 +162,14 @@ export default function AI() {
                     className={`chat-bubble ${
                       m.role === "user" ? "chat-user" : "chat-bot"
                     }`}
-                    style={{ maxWidth: "72%" }}
+                    style={{
+                      maxWidth: "80%",
+                      padding: "15px 20px",
+                      fontSize: "1rem",
+                      lineHeight: "1.5",
+                      borderRadius: "16px",
+                      boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
+                    }}
                   >
                     <div
                       className={`small ${
@@ -167,9 +178,7 @@ export default function AI() {
                     >
                       {m.time}
                     </div>
-                    <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.55 }}>
-                      {m.text}
-                    </div>
+                    <div style={{ whiteSpace: "pre-wrap" }}>{m.text}</div>
                   </div>
                 </div>
               ))}
@@ -183,7 +192,10 @@ export default function AI() {
                 </div>
               )}
             </div>
-            <div className="card-footer bg-white">
+            <div
+              className="card-footer bg-white"
+              style={{ padding: "15px 20px" }}
+            >
               <div className="d-flex gap-2">
                 <input
                   className="form-control"
@@ -203,6 +215,7 @@ export default function AI() {
                         });
                     }
                   }}
+                  style={{ fontSize: "1rem", padding: "12px 15px" }}
                 />
                 <button
                   className="btn btn-primary d-flex align-items-center gap-2"
@@ -216,6 +229,11 @@ export default function AI() {
                       setPending,
                     })
                   }
+                  style={{
+                    padding: "12px 15px",
+                    fontSize: "1rem",
+                    borderRadius: "50px",
+                  }}
                 >
                   <FaPaperPlane /> Send
                 </button>
@@ -226,8 +244,8 @@ export default function AI() {
 
         <div className="col-lg-5">
           <div
-            className="card border-0 shadow-sm mb-3"
-            style={{ borderRadius: 16 }}
+            className="card border-0 shadow-lg mb-3"
+            style={{ borderRadius: 20 }}
           >
             <div className="card-body">
               <div className="fw-semibold mb-2">Quick Symptom Picks</div>
