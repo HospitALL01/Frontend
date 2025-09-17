@@ -1,20 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Spinner,
-  Alert,
-} from "react-bootstrap";
-import {
-  FaCheckCircle,
-  FaRegListAlt,
-  FaTimesCircle,
-  FaTrash,
-} from "react-icons/fa";
+import { Container, Row, Col, Card, Table, Button, Spinner, Alert } from "react-bootstrap";
+import { FaCheckCircle, FaRegListAlt, FaTimesCircle, FaTrash } from "react-icons/fa";
 import "../index.css";
 
 const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -66,10 +52,7 @@ export default function AdminDashboard() {
     } catch (e) {
       const cache = loadCache();
       setDoctorList(cache);
-      setError(
-        e?.message ||
-          "Could not fetch from server. Showing cached data if available."
-      );
+      setError(e?.message || "Could not fetch from server. Showing cached data if available.");
     } finally {
       setLoading(false);
     }
@@ -199,17 +182,16 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <Container className="my-4">
-        <Row className="g-3">
+      <Container className='my-4'>
+        <Row className='g-3'>
           <Col md={2}>
             <Card
-              className="shadow-sm text-center h-100 border-0 account-card"
+              className='shadow-sm text-center h-100 border-0 account-card'
               style={{ cursor: "pointer" }}
-              onClick={toggleAccount}
-            >
+              onClick={toggleAccount}>
               <Card.Body>
                 <div style={{ fontSize: "2rem" }}>👤</div>
-                <Card.Title className="mt-2">Account</Card.Title>
+                <Card.Title className='mt-2'>Account</Card.Title>
               </Card.Body>
             </Card>
           </Col>
@@ -217,28 +199,26 @@ export default function AdminDashboard() {
           {/* Accepted Doctors */}
           <Col md={2}>
             <Card
-              className="shadow-sm text-center h-100 border-0 account-card"
+              className='shadow-sm text-center h-100 border-0 account-card'
               style={{ cursor: "pointer" }}
-              onClick={toggleAcceptedDoctors}
-            >
+              onClick={toggleAcceptedDoctors}>
               <Card.Body>
                 <div style={{ fontSize: "2rem" }}>
                   <FaRegListAlt />
                 </div>
-                <Card.Title className="mt-2">Accepted Doctors</Card.Title>
+                <Card.Title className='mt-2'>Accepted Doctors</Card.Title>
               </Card.Body>
             </Card>
           </Col>
 
           <Col md={8}>
             {loading && (
-              <div className="d-flex align-items-center gap-2">
-                <Spinner animation="border" size="sm" />{" "}
-                <span>Loading doctors…</span>
+              <div className='d-flex align-items-center gap-2'>
+                <Spinner animation='border' size='sm' /> <span>Loading doctors…</span>
               </div>
             )}
             {!loading && error && (
-              <Alert variant="warning" className="mt-2">
+              <Alert variant='warning' className='mt-2'>
                 {error}
               </Alert>
             )}
@@ -247,21 +227,21 @@ export default function AdminDashboard() {
 
         {/* Double Click Error */}
         {doubleClickError && (
-          <Alert variant="danger" className="mt-2">
+          <Alert variant='danger' className='mt-2'>
             {doubleClickError}
           </Alert>
         )}
 
         {/* Account (Doctor Information) */}
         {showAccount && !showDoctorInfo && (
-          <Container className="mt-3">
-            <Card className="shadow-sm border-0">
-              <Card.Header className="bg-primary text-white">
-                <h5 className="mb-0">Doctor Information</h5>
+          <Container className='mt-3'>
+            <Card className='shadow-sm border-0'>
+              <Card.Header className='bg-primary text-white'>
+                <h5 className='mb-0'>Doctor Information</h5>
               </Card.Header>
               <Card.Body>
-                <Table striped bordered hover responsive className="mt-3">
-                  <thead className="table-primary">
+                <Table striped bordered hover responsive className='mt-3'>
+                  <thead className='table-primary'>
                     <tr>
                       <th>#</th>
                       <th>Doctor's Name</th>
@@ -275,7 +255,7 @@ export default function AdminDashboard() {
                   <tbody>
                     {doctorList.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="text-center">
+                        <td colSpan={7} className='text-center'>
                           No doctor found
                         </td>
                       </tr>
@@ -284,8 +264,7 @@ export default function AdminDashboard() {
                         <tr
                           key={`${d.email}-${idx}`}
                           onClick={() => handleDoctorClick(d)}
-                          style={{ cursor: "pointer" }}
-                        >
+                          style={{ cursor: "pointer" }}>
                           <td>{idx + 1}</td>
                           <td>{d.doctorName}</td>
                           <td>{d.specialization}</td>
@@ -293,13 +272,9 @@ export default function AdminDashboard() {
                           <td>{d.email}</td>
                           <td>{d.phone}</td>
                           <td>
-                            {acceptedDoctors.some(
-                              (doc) => doc.email === d.email
-                            ) ? (
+                            {acceptedDoctors.some((doc) => doc.email === d.email) ? (
                               <FaCheckCircle style={{ color: "green" }} />
-                            ) : declinedDoctors.some(
-                                (doc) => doc.email === d.email
-                              ) ? (
+                            ) : declinedDoctors.some((doc) => doc.email === d.email) ? (
                               <FaTimesCircle style={{ color: "red" }} />
                             ) : (
                               "Pending"
@@ -317,14 +292,14 @@ export default function AdminDashboard() {
 
         {/* Doctor details */}
         {selectedDoctor && showDoctorInfo && (
-          <Container className="mt-3">
-            <Card className="shadow-sm border-0">
-              <Card.Header className="bg-primary text-white">
-                <h5 className="mb-0">Doctor Details</h5>
+          <Container className='mt-3'>
+            <Card className='shadow-sm border-0'>
+              <Card.Header className='bg-primary text-white'>
+                <h5 className='mb-0'>Doctor Details</h5>
               </Card.Header>
               <Card.Body>
-                <Table striped bordered hover responsive className="mt-3">
-                  <thead className="table-primary">
+                <Table striped bordered hover responsive className='mt-3'>
+                  <thead className='table-primary'>
                     <tr>
                       <th>Field</th>
                       <th>Details</th>
@@ -378,43 +353,32 @@ export default function AdminDashboard() {
                   </tbody>
                 </Table>
 
-                <div className="d-flex justify-content-center mt-4 gap-3">
+                <div className='d-flex justify-content-center mt-4 gap-3'>
                   <Button
-                    variant="success"
-                    size="lg"
+                    variant='success'
+                    size='lg'
                     onClick={() => handleAcceptClick(selectedDoctor)}
-                    title="Accept this doctor"
-                    className="btn-small"
-                    disabled={acceptedDoctors.some(
-                      (d) => d.email === selectedDoctor.email
-                    )}
-                  >
+                    title='Accept this doctor'
+                    className='btn-small'
+                    disabled={acceptedDoctors.some((d) => d.email === selectedDoctor.email)}>
                     <FaCheckCircle style={{ marginRight: "8px" }} />
                     Accept Doctor
                   </Button>
 
                   <Button
-                    variant="danger"
-                    size="lg"
+                    variant='danger'
+                    size='lg'
                     onClick={() => handleDeclineClick(selectedDoctor)}
-                    title="Decline this doctor"
-                    className="btn-small"
-                    disabled={declinedDoctors.some(
-                      (d) => d.email === selectedDoctor.email
-                    )}
-                  >
+                    title='Decline this doctor'
+                    className='btn-small'
+                    disabled={declinedDoctors.some((d) => d.email === selectedDoctor.email)}>
                     <FaTimesCircle style={{ marginRight: "8px" }} />
                     Decline Doctor
                   </Button>
                 </div>
 
-                <div className="d-flex justify-content-center mt-4">
-                  <Button
-                    variant="secondary"
-                    onClick={handleBackClick}
-                    size="lg"
-                    className="btn-back"
-                  >
+                <div className='d-flex justify-content-center mt-4'>
+                  <Button variant='secondary' onClick={handleBackClick} size='lg' className='btn-back'>
                     Back
                   </Button>
                 </div>
@@ -425,14 +389,14 @@ export default function AdminDashboard() {
 
         {/* Accepted Doctors Section */}
         {showAcceptedDoctors && acceptedDoctors.length > 0 && (
-          <Container className="mt-3">
-            <Card className="shadow-sm border-0">
-              <Card.Header className="bg-success text-white">
-                <h5 className="mb-0">Accepted Doctors</h5>
+          <Container className='mt-3'>
+            <Card className='shadow-sm border-0'>
+              <Card.Header className='bg-success text-white'>
+                <h5 className='mb-0'>Accepted Doctors</h5>
               </Card.Header>
               <Card.Body>
-                <Table striped bordered hover responsive className="mt-3">
-                  <thead className="table-success">
+                <Table striped bordered hover responsive className='mt-3'>
+                  <thead className='table-success'>
                     <tr>
                       <th>Doctor's Name</th>
                       <th>Specialization</th>
@@ -443,25 +407,20 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody>
                     {acceptedDoctors.map((d) => (
-                      <tr
-                        key={d.email}
-                        onClick={() => handleAcceptedDoctorClick(d)}
-                        style={{ cursor: "pointer" }}
-                      >
+                      <tr key={d.email} onClick={() => handleAcceptedDoctorClick(d)} style={{ cursor: "pointer" }}>
                         <td>{d.doctorName}</td>
                         <td>{d.specialization}</td>
                         <td>{d.hospitalName}</td>
                         <td>{d.email}</td>
                         <td>
                           <Button
-                            variant="danger"
-                            size="sm"
+                            variant='danger'
+                            size='sm'
                             onClick={(e) => {
                               e.stopPropagation();
                               handleDeleteDoctorFromAccepted(d);
                             }}
-                            title="Delete this doctor"
-                          >
+                            title='Delete this doctor'>
                             <FaTrash />
                           </Button>
                         </td>
