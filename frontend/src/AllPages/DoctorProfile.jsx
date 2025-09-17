@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom"; // Use useNavigate for navigation
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt, FaBriefcase, FaGraduationCap, FaStar } from "react-icons/fa";
 import "../index.css";
 
 const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export default function DoctorProfile() {
-  const { email } = useParams(); // Fetching the doctor email from the URL
+  const { email } = useParams();
   const location = useLocation();
-  const navigate = useNavigate(); // Use navigate for redirecting
+  const navigate = useNavigate();
   const doctorFromState = location.state?.doctor;
 
-  const [doctorData, setDoctorData] = useState(doctorFromState || null); // Use state data if available
+  const [doctorData, setDoctorData] = useState(doctorFromState || null);
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [reviewError, setReviewError] = useState(null); // State to manage review submission errors
 
   useEffect(() => {
     if (!doctorFromState) {
@@ -25,14 +26,14 @@ export default function DoctorProfile() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token if needed
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
 
           if (response.ok) {
             const data = await response.json();
             setDoctorData(data.data);
-            setReviews(data.data.reviews || []); // Fetch reviews as well
+            setReviews(data.data.reviews || []);
           } else {
             const errorData = await response.json();
             setError(errorData?.message || "Failed to fetch doctor data.");
@@ -47,12 +48,12 @@ export default function DoctorProfile() {
   }, [doctorFromState, email]);
 
   const handleBookAppointment = () => {
-    // Redirect to the booking page and pass the doctor data to it
     navigate("/book-now", { state: { doctor: doctorData } });
   };
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
+    setReviewError(null); // Reset any previous error
 
     if (!doctorData?.email) {
       alert("Doctor email is not available.");
@@ -64,33 +65,30 @@ export default function DoctorProfile() {
       comment: comment,
     };
 
-    console.log("Submitting review for doctor: ", reviewData);
-
     try {
       const response = await fetch(`${API_BASE}/api/doctor-info/${doctorData.email}/review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for authentication
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(reviewData),
       });
 
       const data = await response.json();
       if (response.ok) {
-        // Add the review to the state and update the UI
         setReviews([
           ...reviews,
           { rating, comment, name: localStorage.getItem("user_name"), date: new Date().toLocaleDateString() },
         ]);
         setRating(0);
         setComment("");
-        alert(data.message); // Show success message
+        alert(data.message);
       } else {
-        alert(data.message || "Error submitting review.");
+        setReviewError(data.message || "Error submitting review.");
       }
     } catch (error) {
-      alert("An error occurred while submitting your review.");
+      setReviewError("An error occurred while submitting your review.");
       console.error("Error submitting review:", error);
     }
   };
@@ -120,7 +118,6 @@ export default function DoctorProfile() {
           <div className='card shadow-sm border-0 p-4 mb-4 doctor-profile-card'>
             <div className='d-flex flex-column flex-md-row align-items-center'>
               <div className='doctor-img-placeholder me-md-4 mb-3 mb-md-0'>
-                {/* Image Placeholder */}
                 <svg width='100' height='100' viewBox='0 0 100 100' fill='#e9ecef'>
                   <path d='M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z' />
                   <path d='M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z' />
@@ -164,7 +161,6 @@ export default function DoctorProfile() {
               Qualifications
             </h4>
             <ul className='list-unstyled'>
-              {/* Displaying Qualifications */}
               {doctorData.qualifications?.map((q, index) => (
                 <li key={index} className='mb-2'>
                   <p className='fw-semibold mb-0'>{q.degree}</p>
@@ -172,7 +168,6 @@ export default function DoctorProfile() {
                 </li>
               ))}
 
-              {/* Displaying Specialization, Current and Previous Positions */}
               <li>
                 <p className='fw-semibold mb-0'>Specialization: {doctorData.specialization || "Not Available"}</p>
                 <p className='fw-semibold mb-0'>Current Position: {doctorData.currentPosition || "Not Available"}</p>
@@ -195,10 +190,10 @@ export default function DoctorProfile() {
           {/* Patient Reviews */}
           <div className='card shadow-sm border-0 p-4 profile-section-card'>
             <h4 className='fw-bold mb-3'>Patient Reviews</h4>
+            {reviewError && <div className='alert alert-danger'>{reviewError}</div>}
             <div className='mb-4 p-3 bg-light border rounded'>
               <h5 className='mb-3'>Leave a Review</h5>
               <form onSubmit={handleReviewSubmit}>
-                {/* Rating and comment form */}
                 <div className='mb-3'>
                   <label className='form-label fw-semibold'>Your Rating</label>
                   <div className='star-rating'>
@@ -229,21 +224,24 @@ export default function DoctorProfile() {
               </form>
             </div>
 
-            {/* Reviews Display */}
-            {reviews.map((review, index) => (
-              <div key={index} className='review-item mb-3'>
-                <div className='d-flex justify-content-between align-items-center'>
-                  <p className='fw-semibold mb-0'>{review.name}</p>
-                  <span className='text-muted small'>{review.date}</span>
+            {reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <div key={index} className='review-item mb-3'>
+                  <div className='d-flex justify-content-between align-items-center'>
+                    <p className='fw-semibold mb-0'>{review.name}</p>
+                    <span className='text-muted small'>{review.date}</span>
+                  </div>
+                  <div className='text-warning my-1'>
+                    {[...Array(review.rating)].map((_, i) => (
+                      <FaStar key={i} />
+                    ))}
+                  </div>
+                  <p className='text-muted small'>{review.comment}</p>
                 </div>
-                <div className='text-warning my-1'>
-                  {[...Array(review.rating)].map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-                </div>
-                <p className='text-muted small'>{review.comment}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No reviews yet.</p>
+            )}
           </div>
         </div>
       </div>

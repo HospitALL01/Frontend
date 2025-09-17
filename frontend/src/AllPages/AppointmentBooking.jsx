@@ -35,9 +35,7 @@ export default function AppointmentBooking() {
       <div className='row'>
         {accepted.length === 0 ? (
           <div className='col-12'>
-            <div className='alert alert-info'>
-              এখনো কোনো ডাক্তার Admin দ্বারা <strong>Accepted</strong> হয়নি। অনুগ্রহ করে পরে চেষ্টা করুন।
-            </div>
+            <div className='alert alert-info'>Doctors are not available right now. Please check back later.</div>
           </div>
         ) : (
           (showAllDoctors ? accepted : accepted.slice(0, 3)).map((doctor) => (
