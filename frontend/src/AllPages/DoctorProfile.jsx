@@ -118,11 +118,15 @@ export default function DoctorProfile() {
           <div className='card shadow-sm border-0 p-4 mb-4 doctor-profile-card'>
             <div className='d-flex flex-column flex-md-row align-items-center'>
               <div className='doctor-img-placeholder me-md-4 mb-3 mb-md-0'>
+                {doctorData.profile_picture_url ? (
+                  <img src={doctorData.profile_picture_url} alt={doctorData.doctorName} className="doctor-profile-pic" />
+                ) : (
                 <svg width='100' height='100' viewBox='0 0 100 100' fill='#e9ecef'>
                   <path d='M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z' />
                   <path d='M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z' />
                   <path d='M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z' />
                 </svg>
+                )}
               </div>
 
               <div className='flex-grow-1 text-center text-md-start'>

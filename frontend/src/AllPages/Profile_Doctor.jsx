@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Container, Grid, Card, TextField, Typography, Box } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  Card,
+  TextField,
+  Typography,
+  Box,
+  Avatar,
+} from "@mui/material";
 import { Stepper, Step, StepLabel } from "@mui/material";
 
 /** ---------- LocalStorage Helpers ---------- */
@@ -11,7 +20,8 @@ const loadFormMap = () => {
   }
 };
 
-const saveFormMap = (obj) => localStorage.setItem("doctorFormByEmail", JSON.stringify(obj));
+const saveFormMap = (obj) =>
+  localStorage.setItem("doctorFormByEmail", JSON.stringify(obj));
 
 const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
@@ -32,6 +42,9 @@ const DoctorJoinForm = () => {
     errorMessage: "",
   });
 
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [picturePreview, setPicturePreview] = useState("");
+
   const [step, setStep] = useState(0);
   const [editingMode, setEditingMode] = useState(false);
   const [existingEmail, setExistingEmail] = useState(null);
@@ -40,9 +53,35 @@ const DoctorJoinForm = () => {
 
   const mountedRef = useRef(false);
 
-  /** --------- Mount: Prefill from localStorage (email→form) ---------- */
+  /** --------- Mount: Prefill from server + localStorage ---------- */
   useEffect(() => {
-    const storedEmail = (localStorage.getItem("doctorEmail") || "").toLowerCase();
+    const storedEmail = (
+      localStorage.getItem("doctorEmail") || ""
+    ).toLowerCase();
+
+    const fetchDoctorProfile = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/doctor-info/${storedEmail}`);
+        if (!res.ok) return;
+
+        const json = await res.json();
+        const serverData = json.data;
+
+        setFormData({ ...serverData, errorMessage: "" });
+        if (serverData.profile_picture_url) {
+          setPicturePreview(serverData.profile_picture_url);
+        }
+        setExistingEmail(storedEmail);
+        setLockIdentity(true);
+      } catch (error) {
+        console.error("Failed to fetch initial doctor profile:", error);
+      }
+    };
+
+    if (storedEmail) {
+      fetchDoctorProfile();
+    }
+
     const storedPhone = localStorage.getItem("doctorPhone") || "";
     const storedName = localStorage.getItem("doctorName") || "";
 
@@ -51,6 +90,9 @@ const DoctorJoinForm = () => {
 
     if (savedForm) {
       setFormData({ ...savedForm, errorMessage: "" });
+      if (savedForm.profile_picture_url) {
+        setPicturePreview(savedForm.profile_picture_url);
+      }
       setExistingEmail(storedEmail);
       setLockIdentity(true);
     } else {
@@ -67,26 +109,42 @@ const DoctorJoinForm = () => {
     mountedRef.current = true;
   }, []);
 
-  /** --------- Auto-Save per change (if email present) ---------- */
+  /** --------- Auto-Save per change ---------- */
   useEffect(() => {
     if (!mountedRef.current) return;
     const emailKey = (formData.email || "").toLowerCase().trim();
     if (!emailKey) return;
     const map = loadFormMap();
-    map[emailKey] = { ...formData, errorMessage: "" };
+    map[emailKey] = {
+      ...formData,
+      errorMessage: "",
+      profile_picture_url: picturePreview,
+    };
     saveFormMap(map);
-  }, [formData]);
+  }, [formData, picturePreview]);
 
-  /** --------- Change Handler (identity always locked) ---------- */
+  /** --------- Handlers ---------- */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if ((name === "doctorName" || name === "email" || name === "phone") && lockIdentity) {
+    if (
+      (name === "doctorName" || name === "email" || name === "phone") &&
+      lockIdentity
+    ) {
       return;
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  /** --------- Required validation ---------- */
+  const handlePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setProfilePicture(file);
+      setPicturePreview(URL.createObjectURL(file));
+    } else {
+      setProfilePicture(null);
+    }
+  };
+
   const invalidRequired = () =>
     !formData.doctorName ||
     !formData.specialization ||
@@ -97,43 +155,46 @@ const DoctorJoinForm = () => {
     !formData.phone ||
     !formData.email;
 
-  /** --------- Save doctorData to localStorage (for Admin quick view) ---------- */
-  const mirrorToDoctorData = (payload) => {
-    try {
-      localStorage.setItem("doctorData", JSON.stringify(payload));
-      // সাথে সাথে Admin cache-এও আপডেট পুশ করলে রিফ্রেশ ছাড়াই সঙ্গে সঙ্গে শো করবে
-      const adminCacheKey = "adminDoctorListCache";
-      const cacheRaw = localStorage.getItem(adminCacheKey);
-      const list = cacheRaw ? JSON.parse(cacheRaw) : [];
-      const idx = list.findIndex((d) => (d.email || "").toLowerCase() === (payload.email || "").toLowerCase());
-      if (idx >= 0) list[idx] = payload;
-      else list.unshift(payload);
-      localStorage.setItem(adminCacheKey, JSON.stringify(list));
-    } catch {
-      // ignore
-    }
-  };
-
-  /** --------- First-time Submit (CREATE or UPDATE) ---------- */
   const handleSubmit = async () => {
     if (invalidRequired()) {
-      setFormData((prev) => ({ ...prev, errorMessage: "All fields are required!" }));
+      setFormData((prev) => ({
+        ...prev,
+        errorMessage: "All required fields must be filled!",
+      }));
       return;
     }
 
-    try {
-      const url = existingEmail ? `${API_BASE}/api/doctor-info/${existingEmail}` : `${API_BASE}/api/doctor-info`;
+    const submissionData = new FormData();
+    for (const key in formData) {
+      submissionData.append(key, formData[key]);
+    }
+    if (profilePicture) {
+      submissionData.append("profile_picture", profilePicture);
+    }
 
+    try {
+      const url = existingEmail
+        ? `${API_BASE}/api/doctor-info/${existingEmail}`
+        : `${API_BASE}/api/doctor-info`;
       const method = existingEmail ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        // ✅ Add Authorization header for protected routes
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+        body: submissionData,
       });
 
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json?.message || "Failed to submit the form");
+      if (!res.ok)
+        throw new Error(json?.message || "Failed to submit the form");
+      const updatedProfile = json.data;
+       if (updatedProfile.profile_picture_url) {
+         setPicturePreview(updatedProfile.profile_picture_url);
+       }
 
       const createdEmail = (formData.email || "").toLowerCase().trim();
       setExistingEmail(createdEmail);
@@ -142,29 +203,19 @@ const DoctorJoinForm = () => {
       setFormData((prev) => ({ ...prev, errorMessage: "" }));
       setIsFormSubmitted(true);
 
-      // ✅ লোকাল doctorData আপডেট — Admin Dashboard দ্রুত পেয়ে যাবে
-      mirrorToDoctorData({
-        doctorName: formData.doctorName,
-        gender: formData.gender,
-        nationality: formData.nationality,
-        specialization: formData.specialization,
-        licenseNumber: formData.licenseNumber,
-        licenseIssueDate: formData.licenseIssueDate,
-        hospitalName: formData.hospitalName,
-        yearsOfExperience: formData.yearsOfExperience,
-        phone: formData.phone,
-        email: createdEmail,
-        currentPosition: formData.currentPosition,
-        previousPositions: formData.previousPositions,
-      });
-
-      alert(existingEmail ? "Doctor information updated successfully!" : "Doctor information submitted successfully!");
+      alert(
+        existingEmail
+          ? "Information updated successfully!"
+          : "Information submitted successfully!"
+      );
     } catch (err) {
-      setFormData((prev) => ({ ...prev, errorMessage: err?.message || "There was an error submitting the form." }));
+      setFormData((prev) => ({
+        ...prev,
+        errorMessage: err?.message || "An error occurred.",
+      }));
     }
   };
 
-  /** --------- Update flow (identity fields excluded) ---------- */
   const onUpdateClick = () => {
     if (!editingMode) {
       setEditingMode(true);
@@ -173,7 +224,6 @@ const DoctorJoinForm = () => {
     handleSubmit();
   };
 
-  /** --------- Stepper navigation ---------- */
   const nextStep = () => {
     if (step < 2) setStep(step + 1);
   };
@@ -181,42 +231,66 @@ const DoctorJoinForm = () => {
     if (step > 0) setStep(step - 1);
   };
 
-  /** --------- UI ---------- */
+  /** --------- UI Logic ---------- */
   const hasCreated = !!existingEmail;
   const primaryCtaLabel = hasCreated
-    ? isFormSubmitted
-      ? "Update"
-      : editingMode
+    ? editingMode
       ? "Save Update"
       : "Update"
     : step === 2
     ? "Submit"
     : "Next";
-
   const primaryOnClick = hasCreated
-    ? isFormSubmitted
-      ? onUpdateClick
-      : step === 2
-      ? handleSubmit
-      : nextStep
+    ? onUpdateClick
     : step === 2
     ? handleSubmit
     : nextStep;
 
   return (
-    <Container className='my-5' maxWidth='md'>
-      <Typography variant='h4' component='h2' align='center' color='primary' gutterBottom>
+    <Container className="my-5" maxWidth="md">
+      <Typography
+        variant="h4"
+        component="h2"
+        align="center"
+        color="primary"
+        gutterBottom
+      >
         Doctor Registration Form
       </Typography>
 
       {formData.errorMessage && (
-        <Box color='red' fontSize='16px' mb={2}>
+        <Typography color="error" align="center" gutterBottom>
           {formData.errorMessage}
-        </Box>
+        </Typography>
       )}
 
-      <Card className='p-4 shadow-lg rounded-lg' sx={{ backgroundColor: "#f7f7f7", borderRadius: "10px" }}>
-        <Stepper activeStep={step} alternativeLabel>
+      <Card
+        className="p-4 shadow-lg"
+        sx={{ backgroundColor: "#f7f7f7", borderRadius: "15px" }}
+      >
+        <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
+          <Avatar
+            src={picturePreview}
+            sx={{
+              width: 120,
+              height: 120,
+              mb: 2,
+              border: "2px solid #ddd",
+              backgroundColor: "#e0e0e0",
+            }}
+          />
+          <Button variant="outlined" component="label">
+            Upload Profile Picture
+            <input
+              type="file"
+              hidden
+              accept="image/png, image/jpeg, image/gif"
+              onChange={handlePictureChange}
+            />
+          </Button>
+        </Box>
+
+        <Stepper activeStep={step} alternativeLabel sx={{ mb: 4 }}>
           <Step>
             <StepLabel>Step 1: Personal Information</StepLabel>
           </Step>
@@ -229,199 +303,180 @@ const DoctorJoinForm = () => {
         </Stepper>
 
         <form onSubmit={(e) => e.preventDefault()}>
-          {/* Step 1 */}
           {step === 0 && (
-            <Box display='grid' gridTemplateColumns='repeat(1, 1fr)' gap={4}>
-              <TextField
-                label="Doctor's Full Name"
-                variant='outlined'
-                fullWidth
-                name='doctorName'
-                value={formData.doctorName}
-                onChange={handleChange}
-                required
-                disabled={true}
-                InputProps={{ readOnly: true }}
-                sx={{ borderRadius: "8px" }}
-              />
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label='Gender'
-                    variant='outlined'
-                    select
-                    fullWidth
-                    name='gender'
-                    value={formData.gender}
-                    onChange={handleChange}
-                    required
-                    SelectProps={{ native: true }}
-                    sx={{ borderRadius: "8px" }}>
-                    <option value=''></option>
-                    <option value='male'>Male</option>
-                    <option value='female'>Female</option>
-                    <option value='other'>Other</option>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label='Nationality'
-                    variant='outlined'
-                    fullWidth
-                    name='nationality'
-                    value={formData.nationality}
-                    onChange={handleChange}
-                    required
-                    sx={{ borderRadius: "8px" }}
-                  />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  label="Doctor's Full Name"
+                  variant="outlined"
+                  fullWidth
+                  name="doctorName"
+                  value={formData.doctorName}
+                  onChange={handleChange}
+                  required
+                  disabled={lockIdentity}
+                />
               </Grid>
-            </Box>
-          )}
-
-          {/* Step 2 */}
-          {step === 1 && (
-            <Grid container spacing={4} mt={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Specialization'
-                  variant='outlined'
+                  label="Gender"
+                  variant="outlined"
+                  select
                   fullWidth
-                  name='specialization'
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                  SelectProps={{ native: true }}
+                >
+                  <option value=""></option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Nationality"
+                  variant="outlined"
+                  fullWidth
+                  name="nationality"
+                  value={formData.nationality}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {step === 1 && (
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Specialization"
+                  variant="outlined"
+                  fullWidth
+                  name="specialization"
                   value={formData.specialization}
                   onChange={handleChange}
                   required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='License Number'
-                  variant='outlined'
+                  label="License Number"
+                  variant="outlined"
                   fullWidth
-                  name='licenseNumber'
+                  name="licenseNumber"
                   value={formData.licenseNumber}
                   onChange={handleChange}
                   required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='License Issue Date'
-                  type='date'
-                  variant='outlined'
+                  label="License Issue Date"
+                  type="date"
+                  variant="outlined"
                   fullWidth
-                  name='licenseIssueDate'
+                  name="licenseIssueDate"
                   value={formData.licenseIssueDate}
                   onChange={handleChange}
                   required
                   InputLabelProps={{ shrink: true }}
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Hospital Name'
-                  variant='outlined'
+                  label="Hospital Name"
+                  variant="outlined"
                   fullWidth
-                  name='hospitalName'
+                  name="hospitalName"
                   value={formData.hospitalName}
                   onChange={handleChange}
                   required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
             </Grid>
           )}
 
-          {/* Step 3 */}
           {step === 2 && (
-            <Grid container spacing={4} mt={2}>
+            <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Years of Experience'
-                  variant='outlined'
+                  label="Years of Experience"
+                  variant="outlined"
                   fullWidth
-                  name='yearsOfExperience'
+                  type="number"
+                  name="yearsOfExperience"
                   value={formData.yearsOfExperience}
                   onChange={handleChange}
                   required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Current Position'
-                  variant='outlined'
+                  label="Current Position"
+                  variant="outlined"
                   fullWidth
-                  name='currentPosition'
+                  name="currentPosition"
                   value={formData.currentPosition}
                   onChange={handleChange}
-                  required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  label='Previous Positions'
-                  variant='outlined'
+                  label="Previous Positions (comma separated)"
+                  variant="outlined"
                   fullWidth
-                  name='previousPositions'
+                  name="previousPositions"
                   value={formData.previousPositions}
                   onChange={handleChange}
-                  required
-                  sx={{ borderRadius: "8px" }}
                 />
               </Grid>
-
-              {/* Phone */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Phone Number'
-                  variant='outlined'
+                  label="Phone Number"
+                  variant="outlined"
                   fullWidth
-                  name='phone'
+                  name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  disabled={true}
-                  InputProps={{ readOnly: true }}
-                  sx={{ borderRadius: "8px" }}
+                  disabled={lockIdentity}
                 />
               </Grid>
-
-              {/* Email */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Email Address'
-                  variant='outlined'
+                  label="Email Address"
+                  variant="outlined"
                   fullWidth
-                  name='email'
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  disabled={true}
-                  InputProps={{ readOnly: true }}
-                  sx={{ borderRadius: "8px" }}
+                  disabled={lockIdentity}
                 />
               </Grid>
             </Grid>
           )}
 
-          {/* Navigation & Primary CTA */}
-          <Box display='flex' justifyContent='space-between' mt={2}>
+          <Box
+            display="flex"
+            justifyContent={step > 0 ? "space-between" : "flex-end"}
+            mt={4}
+          >
             {step > 0 && (
-              <Button variant='outlined' color='primary' onClick={prevStep}>
+              <Button variant="outlined" onClick={prevStep}>
                 Back
               </Button>
             )}
 
             <Button
-              variant='contained'
-              color='primary'
+              variant="contained"
+              color="primary"
               onClick={primaryOnClick}
-              sx={{ padding: "8px 16px", borderRadius: "20px" }}>
+            >
               {primaryCtaLabel}
             </Button>
           </Box>
