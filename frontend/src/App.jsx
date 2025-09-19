@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
-// ✅ 1. Import the ToastContainer and its CSS
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,34 +11,43 @@ import Signup from "./AllPages/Signup.jsx";
 import AI from "./AllPages/AI.jsx";
 import AppointmentBooking from "./AllPages/AppointmentBooking.jsx";
 import HospitalPage from "./AllPages/Hospitals.jsx";
-import DoctorProfile from "./AllPages/DoctorProfile.jsx"; // Updated path to use email
+import DoctorProfile from "./AllPages/DoctorProfile.jsx";
 import BookingPage from "./AllPages/BookingPage.jsx";
 import EmergencyPage from "./AllPages/EmergencyPage.jsx";
 import AdminDashboard from "./AllPages/AdminDashboard.jsx";
 import Profile_Doctor from "./AllPages/Profile_Doctor.jsx";
 
-// Public Pages (guest-access)
 import About from "./AllPages/About.jsx";
 import Blogs from "./AllPages/Blogs.jsx";
 import Support from "./AllPages/Support.jsx";
 import BlogDetailPage from "./AllPages/BlogDetailPage.jsx";
-
-// ✅ 1. IMPORT the new 'AllBlogsPage' component
 import AllBlogsPage from "./AllPages/AllBlogsPage.jsx";
 
-// --- Helpers ---
+// Helpers
 const getRole = () => localStorage.getItem("role");
 const isLoggedIn = () => !!localStorage.getItem("token");
 
-// --- Route Guards ---
+// Route Guards
 const PatientRoute = ({ element }) =>
-  isLoggedIn() && getRole() === "Patient" ? element : <Navigate to='/login' replace />;
+  isLoggedIn() && getRole() === "Patient" ? (
+    element
+  ) : (
+    <Navigate to="/login" replace />
+  );
 
 const DoctorRoute = ({ element }) =>
-  isLoggedIn() && getRole() === "Doctor" ? element : <Navigate to='/login' replace />;
+  isLoggedIn() && getRole() === "Doctor" ? (
+    element
+  ) : (
+    <Navigate to="/login" replace />
+  );
 
 const AdminRoute = ({ element }) =>
-  isLoggedIn() && getRole() === "Admin" ? element : <Navigate to='/login' replace />;
+  isLoggedIn() && getRole() === "Admin" ? (
+    element
+  ) : (
+    <Navigate to="/login" replace />
+  );
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -62,61 +70,95 @@ export default function App() {
     <div>
       <Navbar user={user} onLogout={handleLogout} />
 
-      {/* ✅ 2. Add the ToastContainer component here, right below the Navbar */}
-      <ToastContainer
-        position='top-right'
-        autoClose={4000} // Close notifications after 4 seconds
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme='light'
-      />
+      <ToastContainer position="top-right" autoClose={4000} theme="light" />
 
       <Routes>
-        {/* ✅ Public routes (guest can access without login) */}
-        <Route path='/' element={<About />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/blogs' element={<Blogs />} />
-        <Route path='/blogs/:id' element={<BlogDetailPage />} />
-        <Route path='/blogs/all' element={<AllBlogsPage />} />
-        <Route path='/support' element={<Support />} />
+        {/* Public */}
+        <Route path="/" element={<About />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/:id" element={<BlogDetailPage />} />
+        <Route path="/blogs/all" element={<AllBlogsPage />} />
+        <Route path="/support" element={<Support />} />
 
-        {/* ✅ Auth routes */}
-        <Route path='/login' element={<Login setUser={setUser} />} />
-        <Route path='/signup' element={<Signup />} />
+        {/* Auth */}
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/signup" element={<Signup />} />
 
-        {/* ✅ Patient-only routes */}
-        <Route path='/home' element={<PatientRoute element={<Home user={user} />} />} />
-        <Route path='/find-doctors' element={<PatientRoute element={<AppointmentBooking />} />} />
-        <Route path='/hospitals' element={<PatientRoute element={<HospitalPage />} />} />
-        <Route path='/emergency' element={<PatientRoute element={<EmergencyPage />} />} />
-        {/* View Doctor Profile by Email */}
-        <Route path='/doctor/:email' element={<PatientRoute element={<DoctorProfile user={user} />} />} />
-        <Route path='/book-now' element={<PatientRoute element={<BookingPage />} />} />
-
-        {/* ✅ Doctor-only routes */}
+        {/* Patient-only */}
         <Route
-          path='/appointments'
-          element={<DoctorRoute element={<div className='container py-5'>Doctor Appointments Page</div>} />}
+          path="/home"
+          element={<PatientRoute element={<Home user={user} />} />}
         />
         <Route
-          path='/profile'
-          element={<DoctorRoute element={<div className='container py-5'>Doctor Profile Page</div>} />}
+          path="/find-doctors"
+          element={<PatientRoute element={<AppointmentBooking />} />}
         />
-        <Route path='/profile_doctor' element={<DoctorRoute element={<Profile_Doctor />} />} />
+        <Route
+          path="/hospitals"
+          element={<PatientRoute element={<HospitalPage />} />}
+        />
+        <Route
+          path="/emergency"
+          element={<PatientRoute element={<EmergencyPage />} />}
+        />
+        <Route
+          path="/doctor/:email"
+          element={<PatientRoute element={<DoctorProfile user={user} />} />}
+        />
 
-        {/* ✅ Shared (logged-in) Routes */}
-        <Route path='/ai' element={isLoggedIn() ? <AI user={user} /> : <Navigate to='/login' replace />} />
+        {/* ✅ Booking routes — দুইটাতেই একই পেজ */}
+        <Route
+          path="/booking"
+          element={<PatientRoute element={<BookingPage />} />}
+        />
+        <Route
+          path="/book-now"
+          element={<PatientRoute element={<BookingPage />} />}
+        />
 
-        {/* ✅ Admin-only Routes */}
-        <Route path='/admin-dashboard' element={<AdminRoute element={<AdminDashboard />} />} />
+        {/* Doctor-only */}
+        <Route
+          path="/appointments"
+          element={
+            <DoctorRoute
+              element={
+                <div className="container py-5">Doctor Appointments Page</div>
+              }
+            />
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <DoctorRoute
+              element={
+                <div className="container py-5">Doctor Profile Page</div>
+              }
+            />
+          }
+        />
+        <Route
+          path="/profile_doctor"
+          element={<DoctorRoute element={<Profile_Doctor />} />}
+        />
+
+        {/* Shared (logged-in) */}
+        <Route
+          path="/ai"
+          element={
+            isLoggedIn() ? <AI user={user} /> : <Navigate to="/login" replace />
+          }
+        />
+
+        {/* Admin-only */}
+        <Route
+          path="/admin-dashboard"
+          element={<AdminRoute element={<AdminDashboard />} />}
+        />
 
         {/* Fallback */}
-        <Route path='*' element={<Navigate to='/about' replace />} />
+        <Route path="*" element={<Navigate to="/about" replace />} />
       </Routes>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Use useNavigate for navigation
+import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import "../index.css";
 import {
   format,
@@ -17,13 +17,51 @@ import {
   getDate,
 } from "date-fns";
 
-// Payment method components
+const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+/* ---------------- Helpers ---------------- */
+const normalizeDoctor = (raw) => {
+  if (!raw || typeof raw !== "object") return null;
+  const id = raw.id ?? raw.d_id ?? raw.doctor_id ?? null;
+  const name =
+    raw.d_name ?? raw.name ?? raw.doctor_name ?? raw.doctorName ?? null;
+  const email = raw.d_email ?? raw.email ?? null;
+  const specialization =
+    raw.specialization ?? raw.speciality ?? raw.department ?? "Specialist";
+  return name || id || email ? { id, name, email, specialization } : null;
+};
+
+// patient id/name পড়ার সেফ হেল্পার
+const getPatientFromStorage = () => {
+  const raw = localStorage.getItem("user");
+  let user = {};
+  try {
+    user = raw ? JSON.parse(raw) : {};
+  } catch {}
+  const id =
+    Number(localStorage.getItem("user_id")) ||
+    Number(user?.id) ||
+    Number(user?.user?.id) ||
+    Number(user?.patient?.id);
+  const name =
+    localStorage.getItem("user_name") ||
+    user?.p_name ||
+    user?.name ||
+    user?.user?.name ||
+    user?.patient?.p_name ||
+    "Patient";
+  return { id, name };
+};
+
 const PaymentLogo = ({ method, onClick, disabled, isSelected }) => (
   <div
     className={`payment-logo-wrapper ${disabled ? "disabled" : ""} ${
       isSelected ? "selected" : ""
     }`}
     onClick={!disabled ? () => onClick(method) : undefined}
+    role="button"
+    aria-label={`Pay with ${method}`}
+    style={{ userSelect: "none" }}
   >
     <span className={`payment-logo-text ${method.toLowerCase()}`}>
       {method}
@@ -31,18 +69,24 @@ const PaymentLogo = ({ method, onClick, disabled, isSelected }) => (
   </div>
 );
 
-// Calendar component
+/* ---------------- Calendar ---------------- */
 const Calendar = ({ selectedDate, setSelectedDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const today = new Date(); // Get today's date
+  const today = new Date();
 
   const renderHeader = () => (
-    <div className="calendar-header">
-      <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
+    <div className="calendar-header d-flex justify-content-between align-items-center mb-3">
+      <button
+        className="btn btn-outline-primary btn-sm"
+        onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+      >
         &lt;
       </button>
-      <span>{format(currentMonth, "MMMM yyyy")}</span>
-      <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+      <span className="fw-semibold">{format(currentMonth, "MMMM yyyy")}</span>
+      <button
+        className="btn btn-outline-primary btn-sm"
+        onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+      >
         &gt;
       </button>
     </div>
@@ -51,39 +95,42 @@ const Calendar = ({ selectedDate, setSelectedDate }) => {
   const renderDays = () => {
     const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
     return (
-      <div className="calendar-grid days">
+      <div className="calendar-grid days d-flex justify-content-between">
         {days.map((day) => (
-          <div key={day}>{day}</div>
+          <div key={day} className="text-center fw-bold">
+            {day}
+          </div>
         ))}
       </div>
     );
   };
 
   const renderCells = () => {
-    const monthStart = startOfMonth(currentMonth),
-      monthEnd = endOfMonth(monthStart),
-      startDate = startOfWeek(monthStart),
-      endDate = endOfWeek(monthEnd);
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(monthStart);
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
     const days = eachDayOfInterval({ start: startDate, end: endDate });
 
     return (
-      <div className="calendar-grid">
+      <div className="calendar-grid d-flex flex-wrap">
         {days.map((day) => {
-          const isDisabled = day < today; // Compare with today's date
-          const isTodayDay = isToday(day);
+          const disabled = day < today.setHours(0, 0, 0, 0);
+          const todayFlag = isToday(day);
           const isSelected =
             selectedDate &&
             format(day, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd");
 
           return (
             <div
-              key={day}
-              className={`day ${
-                !isSameMonth(day, monthStart) ? "disabled" : ""
-              } ${isTodayDay ? "today" : ""} ${isSelected ? "selected" : ""} ${
-                isDisabled ? "disabled" : ""
-              }`}
-              onClick={() => !isDisabled && setSelectedDate(day)} // Prevent click on disabled dates
+              key={day.toISOString()}
+              className={`day p-2 text-center border m-1 rounded ${
+                !isSameMonth(day, monthStart) ? "text-muted" : ""
+              } ${todayFlag ? "bg-primary text-white" : ""} ${
+                isSelected ? "border border-3 border-success" : ""
+              } ${disabled ? "text-muted disabled" : "cursor-pointer"}`}
+              onClick={() => !disabled && setSelectedDate(day)}
+              style={{ width: 40, height: 40, lineHeight: "36px" }}
             >
               {getDate(day)}
             </div>
@@ -102,88 +149,116 @@ const Calendar = ({ selectedDate, setSelectedDate }) => {
   );
 };
 
+/* --------------- Booking Page --------------- */
 export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(null);
   const [doctor, setDoctor] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState("mobile"); // Track active tab for Mobile Banking and Card/Other
-  const [availableTimes, setAvailableTimes] = useState([]); // Holds available time slots
 
-  // Generate random consultation fee for the doctor (range 10-15)
-  const generateRandomConsultationFee = (doctorEmail) => {
-    const storedFee = localStorage.getItem(`doctor_fee_${doctorEmail}`);
-    if (storedFee) {
-      return parseInt(storedFee); // Return the stored fee if available
-    } else {
-      const randomFee = Math.floor(Math.random() * (15 - 10 + 1)) + 10;
-      localStorage.setItem(`doctor_fee_${doctorEmail}`, randomFee); // Save the fee for this specific doctor
-      return randomFee;
-    }
-  };
-
-  // If doctor data is not passed via state, fetch it from the API
   useEffect(() => {
+    // 1) Router state
     if (state?.doctor) {
-      const updatedDoctor = { ...state.doctor };
-      updatedDoctor.consultationFee = generateRandomConsultationFee(
-        updatedDoctor.email
-      ); // Set unique fee
-      setDoctor(updatedDoctor);
-      setAvailableTimes(generateAvailableTimes(updatedDoctor)); // Set available time slots for the doctor
-    } else {
-      const fetchDoctorData = async () => {
-        try {
-          const response = await fetch(
-            "http://127.0.0.1:8000/api/doctor-info/doctor@example.com",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          const data = await response.json();
-
-          const fetchedDoctor = data.data;
-          fetchedDoctor.consultationFee = generateRandomConsultationFee(
-            fetchedDoctor.email
-          ); // Assign unique fee
-
-          setDoctor(fetchedDoctor);
-          setAvailableTimes(generateAvailableTimes(fetchedDoctor)); // Set available time slots for the doctor
-        } catch (error) {
-          console.error("Error fetching doctor data:", error);
+      const norm = normalizeDoctor(state.doctor);
+      if (norm) {
+        setDoctor({ ...norm, consultationFee: guessFee(norm.email) });
+        return;
+      }
+    }
+    // 2) LocalStorage cache
+    const cached = localStorage.getItem("selected_doctor");
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        const norm = normalizeDoctor(parsed);
+        if (norm) {
+          setDoctor({ ...norm, consultationFee: guessFee(norm.email) });
         }
-      };
-
-      fetchDoctorData();
+      } catch {}
     }
   }, [state?.doctor]);
 
-  // Generate available time slots for the doctor (fixed range of hours)
-  const generateAvailableTimes = (doctor) => {
-    const startHour = 9; // Example start hour (9 AM)
-    const endHour = 17; // Example end hour (5 PM)
-    let times = [];
-    for (let hour = startHour; hour <= endHour; hour++) {
-      const formattedHour = hour < 10 ? `0${hour}:00` : `${hour}:00`;
-      times.push(formattedHour);
-    }
-    return times;
+  const guessFee = (email) => {
+    const key = `doctor_fee_${email || "unknown"}`;
+    const stored = localStorage.getItem(key);
+    if (stored) return Number(stored);
+    const rnd = Math.floor(Math.random() * 6) + 10; // 10–15
+    localStorage.setItem(key, String(rnd));
+    return rnd;
   };
 
-  if (!doctor) {
+  const serviceFee = 25;
+  const consultationFee = doctor?.consultationFee ?? 30;
+  const totalAmount = consultationFee + serviceFee;
+
+  const handlePayment = async () => {
+    if (!selectedPaymentMethod || !selectedDate) {
+      alert("Please fill all the fields.");
+      return;
+    }
+
+    // ✅ Patient info robustly read
+    const { id: patientId, name: patientName } = getPatientFromStorage();
+    if (!patientId || Number.isNaN(patientId)) {
+      alert("Patient ID missing/invalid. Please login again.");
+      return;
+    }
+
+    // ✅ id থাকলে নেবে; না থাকলেও email + name থাকলেই চলবে (backend resolve করবে)
+    if (!doctor?.name || !(doctor?.id || doctor?.email)) {
+      alert("Doctor info incomplete. Please reselect the doctor.");
+      return;
+    }
+
+    // (চাইলে শেষ দুই নির্বাচন লোকালস্টোরেজে রেখে দিতে পারেন)
+    // localStorage.setItem("last_payment_method", selectedPaymentMethod);
+    // localStorage.setItem("last_booking_date", format(selectedDate, "yyyy-MM-dd"));
+
+    const payload = {
+      patient_name: patientName,
+      doctor_name: doctor.name,
+      appointment_date: format(selectedDate, "yyyy-MM-dd"),
+      payment_method: selectedPaymentMethod,
+      fees: totalAmount,
+      doctor_id: doctor.id ?? null,
+      doctor_email: doctor.email ?? null, // backend fallback
+      patient_id: patientId,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/book-appointment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setPaymentSuccess(true);
+        alert(`Booking successful with ${selectedPaymentMethod}!`);
+        navigate("/home");
+      } else {
+        alert(data?.message || "Error processing booking.");
+        console.error("Booking error:", data);
+      }
+    } catch (e) {
+      alert("An error occurred while processing the booking.");
+      console.error(e);
+    }
+  };
+
+  if (!doctor?.name || !(doctor?.id || doctor?.email)) {
     return (
       <div className="container text-center py-5">
-        <h2 className="fw-bold text-danger">Invalid Booking</h2>
+        <h2 className="fw-bold text-danger">Doctor not selected</h2>
         <p className="text-muted">
-          No doctor details found. Please select a doctor first.
+          Doctor info is missing. Please go back and select a doctor again.
         </p>
         <button
           onClick={() => navigate("/find-doctors")}
@@ -195,64 +270,15 @@ export default function BookingPage() {
     );
   }
 
-  const serviceFee = 25; // Example service fee in BDT
-  const consultationFee = doctor.consultationFee || 30; // Use the dynamically generated fee
-  const totalAmount = consultationFee + serviceFee; // Calculate total fee
-
-  const handlePayment = async () => {
-    if (!selectedPaymentMethod || !selectedDate || !selectedTime) {
-      alert("Please fill all the fields.");
-      return;
-    }
-
-    const paymentData = {
-      patient_name: localStorage.getItem("user_name"),
-      doctor_name: doctor.name,
-      appointment_date: format(selectedDate, "yyyy-MM-dd"),
-      appointment_time: selectedTime,
-      payment_method: selectedPaymentMethod,
-      fees: totalAmount,
-      doctor_id: doctor.id,
-      patient_id: localStorage.getItem("user_id"),
-    };
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(paymentData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setPaymentSuccess(true);
-        alert(`Payment successful with ${selectedPaymentMethod}!`);
-        navigate("/home"); // Navigate to home after payment
-      } else {
-        alert(data.message || "Error processing payment.");
-      }
-    } catch (error) {
-      alert("An error occurred while processing the payment.");
-      console.error("Error:", error);
-    }
-  };
-
-  // Handle selecting a payment method
-  const handlePaymentMethodSelection = (method) => {
-    setSelectedPaymentMethod(method); // Update the payment method state
-  };
-
   return (
     <div className="container py-5">
       <div className="row g-5">
-        {/* Left Column for Booking Actions */}
+        {/* Left */}
         <div className="col-lg-7">
           <h2 className="fw-bold mb-4">
             Book Your Appointment with Dr. {doctor.name}
           </h2>
+
           <div className="card shadow-sm border-0 mb-4">
             <div className="card-body p-4 d-flex align-items-center">
               <div className="doctor-img-placeholder me-3">
@@ -261,6 +287,7 @@ export default function BookingPage() {
                   height="60"
                   viewBox="0 0 100 100"
                   fill="#e9ecef"
+                  aria-hidden="true"
                 >
                   <path d="M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z" />
                   <path d="M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z" />
@@ -268,151 +295,63 @@ export default function BookingPage() {
                 </svg>
               </div>
               <div>
-                <h5 className="mb-0">{doctor.name}</h5>
-                <p className="text-muted mb-0">{doctor.specialty}</p>
+                <h5 className="fw-semibold mb-1">{doctor.name}</h5>
+                <p className="mb-0 text-muted">{doctor.specialization}</p>
+                <p className="mb-0 text-muted">
+                  Consultation Fee: {consultationFee} BDT
+                </p>
               </div>
             </div>
           </div>
-          <div className="card shadow-sm border-0">
-            <div className="card-body p-4">
-              <label className="form-label fw-semibold">Select Date</label>
-              <Calendar
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
+
+          <h5 className="fw-semibold mb-3">
+            Select Appointment Date <FaCalendarAlt />
+          </h5>
+          <Calendar
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+
+          <h5 className="fw-semibold mt-4 mb-3">Select Payment Method</h5>
+          <div className="d-flex gap-3 mb-4">
+            {["Mobile", "Credit Card", "Bkash"].map((m) => (
+              <PaymentLogo
+                key={m}
+                method={m}
+                onClick={setSelectedPaymentMethod}
+                disabled={false}
+                isSelected={selectedPaymentMethod === m}
               />
-            </div>
+            ))}
           </div>
-          <div className="card shadow-sm border-0 mt-4">
-            <div className="card-body p-4">
-              <label className="form-label fw-semibold">Select Time</label>
-              <div className="d-flex flex-wrap gap-3">
-                {availableTimes.map((time, index) => (
-                  <button
-                    key={index}
-                    className={`btn btn-outline-secondary ${
-                      selectedTime === time ? "active" : ""
-                    }`}
-                    onClick={() => setSelectedTime(time)}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+
+          <button className="btn btn-success btn-lg" onClick={handlePayment}>
+            Pay {totalAmount} BDT & Book
+          </button>
         </div>
 
-        {/* Right Column for Summary & Payment */}
+        {/* Right */}
         <div className="col-lg-5">
-          <h2 className="fw-bold mb-4">Summary & Payment</h2>
-          <div className="card shadow-sm border-0">
-            <div className="card-body p-4">
-              <div className="billing-summary mb-4">
-                <h5 className="fw-semibold">Billing Summary</h5>
-                {selectedDate ? (
-                  <>
-                    <p className="d-flex align-items-center mb-2">
-                      <FaCalendarAlt className="me-2 text-primary" />
-                      <strong>Date:</strong>&nbsp;{" "}
-                      {format(selectedDate, "eeee, MMM dd")}
-                    </p>
-                    <p className="d-flex align-items-center mb-2">
-                      <FaClock className="me-2 text-primary" />
-                      <strong>Time:</strong>&nbsp;{" "}
-                      {selectedTime || "Not selected"}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-muted">Please select a date.</p>
-                )}
-                <hr />
-                <div className="d-flex justify-content-between text-muted">
-                  <p>Consultation Fee</p>
-                  <p>৳{consultationFee}</p>
-                </div>
-                <div className="d-flex justify-content-between text-muted">
-                  <p>Service Fee</p>
-                  <p>৳{serviceFee}</p>
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between fw-bold fs-5">
-                  <p>Total Amount</p>
-                  <p>৳{totalAmount}</p>
-                </div>
-              </div>
-
-              <h5 className="fw-semibold">Choose Payment Method</h5>
-              <ul className="nav nav-pills nav-fill mb-4">
-                <li className="nav-item">
-                  <button
-                    className={`nav-link ${
-                      activeTab === "mobile" ? "active" : ""
-                    }`}
-                    onClick={() => setActiveTab("mobile")}
-                  >
-                    Mobile Banking
-                  </button>
-                </li>
-                <li className="nav-item">
-                  <button
-                    className={`nav-link ${
-                      activeTab === "card" ? "active" : ""
-                    }`}
-                    onClick={() => setActiveTab("card")}
-                  >
-                    Card / Other
-                  </button>
-                </li>
-              </ul>
-
-              {activeTab === "mobile" && (
-                <div className="d-flex justify-content-center flex-wrap gap-3 mb-4">
-                  <PaymentLogo
-                    method="bKash"
-                    onClick={handlePaymentMethodSelection}
-                    disabled={!selectedDate || !selectedTime}
-                    isSelected={selectedPaymentMethod === "bKash"}
-                  />
-                  <PaymentLogo
-                    method="Nagad"
-                    onClick={handlePaymentMethodSelection}
-                    disabled={!selectedDate || !selectedTime}
-                    isSelected={selectedPaymentMethod === "Nagad"}
-                  />
-                  <PaymentLogo
-                    method="Rocket"
-                    onClick={handlePaymentMethodSelection}
-                    disabled={!selectedDate || !selectedTime}
-                    isSelected={selectedPaymentMethod === "Rocket"}
-                  />
-                </div>
-              )}
-
-              {activeTab === "card" && (
-                <p className="text-center unavailable-message">
-                  This method is currently unavailable.
-                </p>
-              )}
-
-              <div className="d-grid mt-4">
-                <button
-                  className="btn btn-primary btn-lg"
-                  onClick={handlePayment}
-                  disabled={
-                    !selectedDate || !selectedTime || !selectedPaymentMethod
-                  }
-                >
-                  Pay ৳{totalAmount}
-                </button>
-              </div>
-
-              {paymentSuccess && (
-                <div className="mt-4 alert alert-success">
-                  Payment Successful! Thank you for booking with Dr.{" "}
-                  {doctor.name}.
-                </div>
-              )}
+          <div className="card shadow-sm border-0 p-4">
+            <h4 className="fw-bold mb-3">Summary</h4>
+            <div className="d-flex justify-content-between mb-2">
+              <span>Consultation Fee:</span>
+              <span>{consultationFee} BDT</span>
             </div>
+            <div className="d-flex justify-content-between mb-2">
+              <span>Service Fee:</span>
+              <span>25 BDT</span>
+            </div>
+            <hr />
+            <div className="d-flex justify-content-between fw-bold">
+              <span>Total:</span>
+              <span>{totalAmount} BDT</span>
+            </div>
+            {paymentSuccess && (
+              <div className="alert alert-success mt-3 mb-0" role="alert">
+                Booking confirmed!
+              </div>
+            )}
           </div>
         </div>
       </div>
