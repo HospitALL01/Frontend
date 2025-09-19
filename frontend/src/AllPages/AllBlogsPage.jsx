@@ -5,7 +5,7 @@ import "../index.css";
 
 import BlogCard from "../Components/BlogCard"; // Using the central component
 import { blogs } from "../data/blogs";
-import tipsHeaderImage from "../assets/Healthcare-Tips2.jpg";
+import tipsHeaderImage from "../assets/Healthcare-Tips2.jpg"; // Correct import for the image
 
 const AllBlogsPage = () => {
   // This filter correctly gets ALL blogs with the "Healthcare Tips" category
@@ -15,7 +15,7 @@ const AllBlogsPage = () => {
     <>
       <header
         className="blogs-header text-center text-white"
-        style={{ backgroundImage: `url(${tipsHeaderImage})` }}
+        style={{ backgroundImage: `url(${tipsHeaderImage})` }} // Using the imported image
       >
         <Container>
           <h1 className="display-4 fw-bold">All Healthcare Tips</h1>
