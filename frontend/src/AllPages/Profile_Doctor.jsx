@@ -97,11 +97,10 @@ const DoctorJoinForm = () => {
     !formData.phone ||
     !formData.email;
 
-  /** --------- Save doctorData to localStorage (for Admin quick view) ---------- */
   const mirrorToDoctorData = (payload) => {
     try {
       localStorage.setItem("doctorData", JSON.stringify(payload));
-      // সাথে সাথে Admin cache-এও আপডেট পুশ করলে রিফ্রেশ ছাড়াই সঙ্গে সঙ্গে শো করবে
+
       const adminCacheKey = "adminDoctorListCache";
       const cacheRaw = localStorage.getItem(adminCacheKey);
       const list = cacheRaw ? JSON.parse(cacheRaw) : [];
@@ -142,7 +141,6 @@ const DoctorJoinForm = () => {
       setFormData((prev) => ({ ...prev, errorMessage: "" }));
       setIsFormSubmitted(true);
 
-      // ✅ লোকাল doctorData আপডেট — Admin Dashboard দ্রুত পেয়ে যাবে
       mirrorToDoctorData({
         doctorName: formData.doctorName,
         gender: formData.gender,
