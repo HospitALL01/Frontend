@@ -155,6 +155,26 @@ const DoctorJoinForm = () => {
     !formData.phone ||
     !formData.email;
 
+
+  const mirrorToDoctorData = (payload) => {
+    try {
+      localStorage.setItem("doctorData", JSON.stringify(payload));
+
+      const adminCacheKey = "adminDoctorListCache";
+      const cacheRaw = localStorage.getItem(adminCacheKey);
+      const list = cacheRaw ? JSON.parse(cacheRaw) : [];
+      const idx = list.findIndex((d) => (d.email || "").toLowerCase() === (payload.email || "").toLowerCase());
+      if (idx >= 0) list[idx] = payload;
+      else list.unshift(payload);
+      localStorage.setItem(adminCacheKey, JSON.stringify(list));
+    } catch {
+      // ignore
+    }
+  };
+
+  /** --------- First-time Submit (CREATE or UPDATE) ---------- */
+
+
   const handleSubmit = async () => {
     if (invalidRequired()) {
       setFormData((prev) => ({
@@ -203,11 +223,30 @@ const DoctorJoinForm = () => {
       setFormData((prev) => ({ ...prev, errorMessage: "" }));
       setIsFormSubmitted(true);
 
+
+      mirrorToDoctorData({
+        doctorName: formData.doctorName,
+        gender: formData.gender,
+        nationality: formData.nationality,
+        specialization: formData.specialization,
+        licenseNumber: formData.licenseNumber,
+        licenseIssueDate: formData.licenseIssueDate,
+        hospitalName: formData.hospitalName,
+        yearsOfExperience: formData.yearsOfExperience,
+        phone: formData.phone,
+        email: createdEmail,
+        currentPosition: formData.currentPosition,
+        previousPositions: formData.previousPositions,
+      });
+
+      alert(existingEmail ? "Doctor information updated successfully!" : "Doctor information submitted successfully!");
+
       alert(
         existingEmail
           ? "Information updated successfully!"
           : "Information submitted successfully!"
       );
+
     } catch (err) {
       setFormData((prev) => ({
         ...prev,
