@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import brainImage from "../assets/brain.avif";
 import { FaCommentDots, FaUserMd, FaClock, FaShieldAlt, FaHospitalAlt, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import ChatWidget from "./ChatWidget"; // Importing the ChatWidget component
 
 function Home({ user }) {
   const navigate = useNavigate();
+  const [showChat, setShowChat] = useState(false); // State to control visibility of the chat widget
   const role = localStorage.getItem("role"); // Patient | Doctor | null
+
+  // Toggle Chat Widget visibility
+  const toggleChat = () => {
+    setShowChat(!showChat);
+  };
+
+  const handleFindDoctorClick = () => {
+    navigate("/find-doctors");
+  };
+
+  const handleEmergencyClick = () => {
+    navigate("/emergency");
+  };
+
+  const handleAiClick = () => {
+    navigate("/ai");
+  };
 
   return (
     <div className='container py-5 position-relative'>
@@ -42,7 +61,6 @@ function Home({ user }) {
           </div>
         </div>
       )}
-
       {/* Main content (blurred if not Patient) */}
       <div
         style={{
@@ -62,10 +80,19 @@ function Home({ user }) {
               all in one comprehensive platform.
             </p>
             <div className='d-flex flex-wrap gap-2 mt-4'>
-              <button className='btn btn-primary'>🔍 Find a Doctor</button>
-              <button className='btn btn-outline-primary'>📅 Book Appointment</button>
-              <button className='btn btn-success'>💬 AI Chatbot</button>
-              <button className='btn btn-danger'>📞 Emergency</button>
+              {/* <button className='btn btn-primary' onClick={handleFindDoctorClick}>
+                🔍 Find a Doctor
+              </button> */}
+              <button className='btn btn-outline-primary ' onClick={handleFindDoctorClick}>
+                📅 Book Appointment
+              </button>
+              <button className='btn btn-success' onClick={handleAiClick}>
+                💬 AI Chatbot
+              </button>{" "}
+              {/* Toggle Chat Widget */}
+              <button className='btn btn-danger' onClick={handleEmergencyClick}>
+                📞 Emergency
+              </button>
             </div>
             <div className='d-flex gap-4 mt-4 text-muted flex-wrap'>
               <span>✅ 500+ Doctors</span>
@@ -138,6 +165,8 @@ function Home({ user }) {
           </div>
         </section>
       </div>
+      {/* Add the ChatWidget component below the main content */}
+      {showChat && <ChatWidget />} {/* Only show ChatWidget when showChat state is true */}
     </div>
   );
 }

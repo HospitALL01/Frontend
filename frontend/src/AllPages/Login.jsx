@@ -1,10 +1,6 @@
-// src/AllPages/Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/**
- * প্রোফাইল ম্যাপ লোড/সেভ (Signup-এর সাথে একই স্ট্রাকচার)
- */
 const loadProfileMap = () => {
   try {
     return JSON.parse(localStorage.getItem("profileByEmail") || "{}");
@@ -17,33 +13,56 @@ const saveProfileMap = (map) => {
 };
 
 export default function Login({ setUser }) {
-  const [role, setRole] = useState("Doctor"); // Doctor | Patient | Admin
+  const [role, setRole] = useState("Doctor");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
-  // ✅ Read admin credentials from Vite env
   const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || "";
   const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || "";
-
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
   const getLoginUrl = () => {
     if (role === "Doctor") return `${API_BASE}/api/doctor/login`;
     if (role === "Patient") return `${API_BASE}/api/patient/login`;
-    if (role === "Admin") return null; // handled locally
+    if (role === "Admin") return null;
     return null;
   };
 
-  // ✅ Doctor profile keys যেটা Profile_Doctor.jsx (DoctorJoinForm) ব্যবহার করবে
   const setDoctorPrefillKeys = (name, phone, emailVal) => {
     if (emailVal) localStorage.setItem("doctorEmail", emailVal);
     if (phone) localStorage.setItem("doctorPhone", phone);
     if (name) localStorage.setItem("doctorName", name);
+  };
+
+  const extractUserBasics = (role, payload, fallbackEmail) => {
+    const id = payload?.id ?? payload?.user?.id ?? payload?.patient?.id ?? payload?.doctor?.id ?? payload?.p_id ?? null;
+
+    const name =
+      payload?.p_name ??
+      payload?.name ??
+      payload?.fullname ??
+      payload?.doctor_name ??
+      payload?.d_name ??
+      payload?.user?.name ??
+      payload?.patient?.p_name ??
+      payload?.doctor?.d_name ??
+      "User";
+
+    const email =
+      payload?.email ??
+      payload?.user?.email ??
+      payload?.patient?.p_email ??
+      payload?.doctor?.d_email ??
+      fallbackEmail ??
+      "";
+
+    const phone = payload?.phone ?? payload?.doctor_phone ?? payload?.p_phone ?? payload?.user?.phone ?? "";
+
+    return { id, name, email, phone };
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +73,7 @@ export default function Login({ setUser }) {
     if (!email.trim()) return setError("Please enter your email.");
     if (!password) return setError("Please enter your password.");
 
-    // ✅ Admin login (no API call)
+    // --- Admin (local) ---
     if (role === "Admin") {
       if (!adminEmail || !adminPassword) {
         setError("Admin credentials are not set in .env");
@@ -67,8 +86,8 @@ export default function Login({ setUser }) {
         localStorage.setItem("token", "admin-local-token");
         localStorage.setItem("user", JSON.stringify(adminUser));
         localStorage.setItem("role", "Admin");
+        // (Admin এর জন্য user_id দরকার নেই)
         if (typeof setUser === "function") setUser(adminUser);
-        // Admin panel
         navigate("/admin-dashboard", { replace: true });
         return;
       }
@@ -76,7 +95,7 @@ export default function Login({ setUser }) {
       return;
     }
 
-    // ✅ Doctor/Patient (API)
+    // --- Doctor/Patient (API) ---
     const url = getLoginUrl();
     if (!url) {
       setError("Login not supported for this role.");
@@ -97,44 +116,42 @@ export default function Login({ setUser }) {
         throw new Error(msg);
       }
 
-      const userPayload = data.user || data.doctor || data.patient || null;
-      const token = data.token;
-      if (!token || !userPayload) throw new Error("Invalid response from server");
+      // server payload: token + (user/doctor/patient)
+      const payload = data.user || data.doctor || data.patient || data;
+      const token = data.token || data.access_token;
+
+      if (!token || !payload) throw new Error("Invalid response from server");
+
+      const basics = extractUserBasics(role, payload, email.trim().toLowerCase());
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(userPayload));
+      localStorage.setItem("user", JSON.stringify(payload));
       localStorage.setItem("role", role);
-      if (typeof setUser === "function") setUser(userPayload);
 
-      // ✅ Doctor হলে, DoctorJoinForm-এর জন্য প্রিফিল ভ্যালু সেট
-      const emailLower = email.trim().toLowerCase();
-      const map = loadProfileMap();
-      // 1) Signup সময় রাখা থাকলে সেটাই প্রাধান্য
-      const fromMap = map[emailLower];
+      if (basics.id) localStorage.setItem("user_id", String(basics.id));
+      if (basics.name) localStorage.setItem("user_name", basics.name);
 
-      // 2) নাহলে সার্ভার রেসপন্সে name/phone থাকলে সেটি ব্যবহার
-      const derivedName = fromMap?.name || userPayload?.fullname || userPayload?.name || userPayload?.doctor_name || "";
-      const derivedPhone = fromMap?.phone || userPayload?.phone || userPayload?.doctor_phone || "";
+      if (typeof setUser === "function") setUser(payload);
 
       if (role === "Doctor") {
-        // প্রিফিল কী সেট
-        setDoctorPrefillKeys(derivedName, derivedPhone, emailLower);
-
-        // ম্যাপে আপডেট/সিঙ্ক
-        const next = {
+        localStorage.setItem("doctor_id", basics.id); // Save doctor ID in localStorage
+        localStorage.setItem("doctor_name", basics.name); // Save doctor name (optional)
+        setDoctorPrefillKeys(basics.name, basics.phone, basics.email);
+        const mapKey = basics.email || email.trim().toLowerCase();
+        const map = loadProfileMap();
+        map[mapKey] = {
           role: "Doctor",
-          name: derivedName,
-          phone: derivedPhone,
+          name: basics.name || "",
+          phone: basics.phone || "",
         };
-        map[emailLower] = next;
         saveProfileMap(map);
       }
 
       setMessage("✅ Login Successful!");
 
-      // রাউটিং:
+      // Navigate (unchanged)
       if (role === "Patient") navigate("/home", { replace: true });
-      else if (role === "Doctor") navigate("/profile-doctor", { replace: true }); // 🔁 Profile page-এ যাই
+      else if (role === "Doctor") navigate("/profile-doctor", { replace: true });
       else navigate("/", { replace: true });
     } catch (err) {
       setError(err?.message || "⚠️ Something went wrong. Try again.");
