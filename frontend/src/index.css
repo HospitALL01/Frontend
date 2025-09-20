@@ -5,8 +5,7 @@
 /* General Body Styles */
 body {
   /* Using a modern, clean font stack */
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f7f9; /* Light gray-blue for a soft look */
   color: #343a40;
 }
@@ -37,24 +36,27 @@ p {
   position: relative;
   color: #333 !important;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and transform */
 }
+
 .nav-link-custom::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -4px;
+  bottom: 0; /* Ensure the underline stays aligned with the bottom of the text */
   width: 0;
-  height: 2px;
+  height: 2px; /* Fixed height for the underline */
   background-color: #0d6efd;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease; /* Smooth transition for underline width */
 }
+
 .nav-link-custom:hover {
-  transform: translateY(-3px);
-  color: #0d6efd !important;
+  transform: translateY(-1px); /* Move the text upwards smoothly */
+  color: #0d6efd !important; /* Change text color smoothly */
 }
+
 .nav-link-custom:hover::after {
-  width: 100%;
+  width: 100%; /* Expand the underline to full width */
 }
 
 /* ----------------------- Home Page Feature Section --------------------- */
@@ -939,21 +941,151 @@ p {
     height: 400px;
   }
 }
+/* =================================================================== */
+/*             NEW PROFESSIONAL STYLES FOR SUPPORT PAGE                */
+/* =================================================================== */
 
-.notification-icon {
-  transition: transform 0.3s ease, color 0.3s ease;
+.support-page-new {
+  background-color: #f8f9fa;
 }
 
-.notification-icon:hover {
-  transform: rotate(360deg); /* Rotate on hover */
-  color: #0d6efd;
+/* --- About Me Section --- */
+.about-me-card {
+  background-color: #48d1cc; /* Teal color */
+  color: white;
+  padding: 3rem;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
 }
 
-.notification-icon {
-  transition: transform 0.3s ease, color 0.3s ease;
+.experience-badge {
+  position: absolute;
+  top: 25px;
+  right: -50px;
+  background-color: white;
+  color: #333;
+  padding: 8px 50px;
+  transform: rotate(45deg);
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
-.notification-icon:hover {
-  transform: rotate(360deg); /* Rotate on hover */
-  color: #0d6efd; /* Change color to blue on hover */
+.about-me-card .quote-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.read-more-btn-teal {
+  background-color: white !important;
+  color: #48d1cc !important; /* Teal color */
+  border-color: white !important;
+  font-weight: bold;
+  border-radius: 50px !important;
+  padding: 10px 30px !important;
+  transition: all 0.3s ease;
+}
+.read-more-btn-teal:hover {
+  background-color: #f1f1f1 !important;
+  border-color: #f1f1f1 !important;
+}
+
+.support-image-container {
+  text-align: center;
+}
+.support-image-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+/* --- Services Section --- */
+.section-heading-dark::after {
+  background: #333 !important; /* Darker line for light backgrounds */
+}
+
+.service-item {
+  text-align: center;
+}
+
+.service-icon {
+  font-size: 3rem;
+  color: #48d1cc; /* Teal color */
+  margin-bottom: 1rem;
+}
+
+.read-more-link {
+  color: #6c757d;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.read-more-link:hover {
+  color: #48d1cc;
+}
+
+/* --- Stats Banner Section --- */
+.stats-banner {
+  background-color: #343a40; /* Dark grey background */
+  padding: 4rem 0;
+}
+
+.stats-banner h2,
+.stats-banner p {
+  color: white;
+}
+/* =================================================================== */
+/*             NEW STYLES FOR PAGE HEADER BANNERS                      */
+/* =================================================================== */
+
+.page-header-new {
+  position: relative;
+  padding: 6rem 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Adds a dark overlay to make white text readable */
+.page-header-new::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Ensures content is above the overlay */
+.page-header-new .container {
+  position: relative;
+  z-index: 2;
+}
+
+.page-header-new h1,
+.page-header-new p {
+  color: white;
+}
+
+/* A filled version of the teal button for dark backgrounds */
+.read-more-btn-teal-filled {
+  background-color: #48d1cc !important; /* Teal color */
+  color: white !important;
+  border-color: #48d1cc !important;
+  font-weight: bold;
+  border-radius: 50px !important;
+  padding: 10px 30px !important;
+  transition: all 0.3s ease;
+}
+.read-more-btn-teal-filled:hover {
+  background-color: #3caaaa !important; /* Darker teal */
+  border-color: #3caaaa !important;
+}
+/* --- CSS for Doctor Profile Picture (NEW) --- */
+.doctor-profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This ensures the image covers the circle without stretching */
+  border-radius: 50%; /* This makes the image circular */
 }
