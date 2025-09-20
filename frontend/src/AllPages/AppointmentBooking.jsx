@@ -40,7 +40,6 @@ export default function AppointmentBooking() {
 
   return (
     <div className="container py-5">
-
       {/* Notification Bell + Dropdown */}
       <div className="position-absolute" style={{ right: "50px", top: "50px" }}>
         <div className="position-relative">
@@ -100,12 +99,6 @@ export default function AppointmentBooking() {
         <h1 className="fw-bold display-5">Featured Doctors</h1>
       </div>
 
-
-      <div className="text-center mb-5">
-        <h1 className="fw-bold display-5">Featured Doctors</h1>
-      </div>
-
-
       <div className="row">
         {accepted.length === 0 ? (
           <div className="col-12">
@@ -124,7 +117,6 @@ export default function AppointmentBooking() {
                   <div className="d-flex align-items-center mb-4">
                     {/* Image Placeholder */}
                     <div className="doctor-img-placeholder me-3">
-
                       <svg
                         width="80"
                         height="80"
@@ -135,32 +127,6 @@ export default function AppointmentBooking() {
                         <path d="M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z" />
                         <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
                       </svg>
-
-                      {doctor.profile_picture_url ? (
-                        // If a picture URL exists, use an <img> tag
-                        <img
-                          src={
-                            doctor.profile_picture_url
-                              ? `${API_BASE}/storage/${doctor.profile_picture_url}`
-                              : "/default-avatar.png" // fallback local image
-                          }
-                          alt={doctor.doctorName}
-                          className="doctor-profile-pic"
-                        />
-                      ) : (
-                        // Otherwise, show the default SVG placeholder
-                        <svg
-                          width="80"
-                          height="80"
-                          viewBox="0 0 100 100"
-                          fill="#e9ecef"
-                        >
-                          <path d="M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z" />
-                          <path d="M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z" />
-                          <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
-                        </svg>
-                      )}
-
                     </div>
 
                     <div className="flex-grow-1">
