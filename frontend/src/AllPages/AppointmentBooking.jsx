@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaStar, FaMapMarkerAlt, FaBriefcase, FaRegClock } from "react-icons/fa";
+import {
+  FaStar,
+  FaMapMarkerAlt,
+  FaBriefcase,
+  FaRegClock,
+  FaBell, // Import bell icon
+} from "react-icons/fa";
 import "../index.css";
 
 const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -8,6 +14,7 @@ const API_BASE = import.meta?.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 export default function AppointmentBooking() {
   const [accepted, setAccepted] = useState([]);
   const [showAllDoctors, setShowAllDoctors] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false); // State for notifications
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,11 +33,78 @@ export default function AppointmentBooking() {
     setShowAllDoctors(!showAllDoctors);
   };
 
+  // Toggle notification visibility
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   return (
     <div className="container py-5">
+
+      {/* Notification Bell + Dropdown */}
+      <div className="position-absolute" style={{ right: "50px", top: "50px" }}>
+        <div className="position-relative">
+          <button
+            className="btn btn-light"
+            onClick={toggleNotifications}
+            style={{
+              fontSize: "22px",
+              color: "#22034bff",
+              backgroundColor: "transparent",
+              border: "none",
+              transition: "transform 0.3s ease",
+            }}
+          >
+            <FaBell />
+          </button>
+
+          {showNotifications && (
+            <div
+              className="card shadow-lg position-absolute"
+              style={{
+                width: "350px",
+                top: "100%", // directly below bell
+                right: "0",
+                marginTop: "10px",
+                zIndex: 10,
+              }}
+            >
+              <div className="card-header bg-primary text-white">
+                <h5>Notifications</h5>
+              </div>
+              <div className="card-body">
+                <ul className="list-unstyled">
+                  {/* Sample Notifications */}
+                  <li className="d-flex justify-content-between align-items-center py-2">
+                    <p className="mb-0">
+                      New appointment booked with Dr. Smith
+                    </p>
+                    <span className="text-muted" style={{ fontSize: "0.8rem" }}>
+                      Just now
+                    </span>
+                  </li>
+                  <li className="d-flex justify-content-between align-items-center py-2">
+                    <p className="mb-0">Dr. Lee updated availability</p>
+                    <span className="text-muted" style={{ fontSize: "0.8rem" }}>
+                      2 hours ago
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="text-center mb-5">
         <h1 className="fw-bold display-5">Featured Doctors</h1>
       </div>
+
+
+      <div className="text-center mb-5">
+        <h1 className="fw-bold display-5">Featured Doctors</h1>
+      </div>
+
 
       <div className="row">
         {accepted.length === 0 ? (
@@ -50,6 +124,18 @@ export default function AppointmentBooking() {
                   <div className="d-flex align-items-center mb-4">
                     {/* Image Placeholder */}
                     <div className="doctor-img-placeholder me-3">
+
+                      <svg
+                        width="80"
+                        height="80"
+                        viewBox="0 0 100 100"
+                        fill="#e9ecef"
+                      >
+                        <path d="M50,10A40,40,0,1,1,10,50,40,40,0,0,1,50,10M50,0A50,50,0,1,0,100,50,50,50,0,0,0,50,0Z" />
+                        <path d="M50,60A20,20,0,1,1,70,40,20,20,0,0,1,50,60Z" />
+                        <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
+                      </svg>
+
                       {doctor.profile_picture_url ? (
                         // If a picture URL exists, use an <img> tag
                         <img
@@ -74,6 +160,7 @@ export default function AppointmentBooking() {
                           <path d="M50,70A30,30,0,0,1,20,100H80A30,30,0,0,1,50,70Z" />
                         </svg>
                       )}
+
                     </div>
 
                     <div className="flex-grow-1">

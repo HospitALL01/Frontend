@@ -5,7 +5,8 @@
 /* General Body Styles */
 body {
   /* Using a modern, clean font stack */
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   background-color: #f4f7f9; /* Light gray-blue for a soft look */
   color: #343a40;
 }
@@ -941,6 +942,25 @@ p {
     height: 400px;
   }
 }
+
+
+.notification-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.notification-icon:hover {
+  transform: rotate(360deg); /* Rotate on hover */
+  color: #0d6efd;
+}
+
+.notification-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.notification-icon:hover {
+  transform: rotate(360deg); /* Rotate on hover */
+  color: #0d6efd; /* Change color to blue on hover */
+=======
 /* =================================================================== */
 /*             NEW PROFESSIONAL STYLES FOR SUPPORT PAGE                */
 /* =================================================================== */
@@ -1088,4 +1108,5 @@ p {
   height: 100%;
   object-fit: cover; /* This ensures the image covers the circle without stretching */
   border-radius: 50%; /* This makes the image circular */
+
 }
