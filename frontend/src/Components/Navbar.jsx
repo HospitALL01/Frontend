@@ -112,11 +112,11 @@ function Navbar({ user, onLogout }) {
                   Find Doctors
                 </NavLink>
               </li>
-              <li className='nav-item mx-2'>
+              {/* <li className='nav-item mx-2'>
                 <NavLink className='nav-link nav-link-custom' to='/hospitals'>
                   Hospitals
                 </NavLink>
-              </li>
+              </li> */}
               <li className='nav-item mx-2'>
                 <NavLink className='nav-link nav-link-custom' to='/emergency'>
                   Emergency
@@ -125,6 +125,18 @@ function Navbar({ user, onLogout }) {
               <li className='nav-item mx-2'>
                 <NavLink className='nav-link nav-link-custom' to='/ai'>
                   AI Chatbot
+                </NavLink>
+              </li>
+
+              <li className='nav-item mx-2'>
+                <NavLink className='nav-link nav-link-custom' to='/support'>
+                  Support
+                </NavLink>
+              </li>
+
+              <li className='nav-item mx-2'>
+                <NavLink className='nav-link nav-link-custom' to='/about'>
+                  About
                 </NavLink>
               </li>
             </>
