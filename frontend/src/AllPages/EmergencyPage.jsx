@@ -33,7 +33,7 @@ export default function EmergencyPage() {
   const [loadingAmbulances, setLoadingAmbulances] = useState(false);
   const [bookedAmbulance, setBookedAmbulance] = useState(null); // Store booked ambulance for the logged-in user
   const [hasActiveBooking, setHasActiveBooking] = useState(false); // Track if user has an active booking
-  const [selectedEmergency, setSelectedEmergency] = useState("cardiac");
+  const [selectedEmergency, setSelectedEmergency] = useState("");
 
   const GOOGLE_MAPS_API_KEY = "AIzaSyA6PCeCOsrqLxuUa3e-QbbrG-8g30nIe8A"; // Paste your API key here
 
@@ -188,6 +188,10 @@ export default function EmergencyPage() {
       .catch(() => toast.error("An error occurred during cancellation."));
   };
 
+  const handleCall911 = () => {
+    toast.info("Calling 911...");
+  };
+
   return (
     <div className='emergency-page-bg'>
       <div className='container py-5'>
@@ -204,7 +208,7 @@ export default function EmergencyPage() {
           <h3 className='fw-bold'>Life-Threatening Emergency?</h3>
           <p className='text-muted'>For immediate life-threatening emergencies, call emergency services directly.</p>
           <div className='mt-2'>
-            <a href='tel:911' className='btn btn-danger btn-call-911'>
+            <a href='tel:911' className='btn btn-danger btn-call-911' onClick={handleCall911}>
               <FaPhone className='me-2' /> Call 911 Now
             </a>
           </div>
@@ -219,12 +223,11 @@ export default function EmergencyPage() {
                 <h4 className='fw-bold mb-3'>Request Medical Assistance</h4>
                 <label className='form-label fw-semibold'>Type of Emergency *</label>
                 {emergencyTypes.map((type) => (
-                  <button
+                  <span
                     key={type.id}
-                    className={`btn emergency-type-btn ${selectedEmergency === type.id ? "active" : ""}`}
-                    onClick={() => setSelectedEmergency(type.id)}>
+                    className={`btn emergency-type-btn ${selectedEmergency === type.id ? "active" : ""}`}>
                     {type.icon} {type.name}
-                  </button>
+                  </span>
                 ))}
 
                 <div className='mt-3'>

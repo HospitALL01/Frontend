@@ -36,24 +36,27 @@ p {
   position: relative;
   color: #333 !important;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and transform */
 }
+
 .nav-link-custom::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -4px;
+  bottom: 0; /* Ensure the underline stays aligned with the bottom of the text */
   width: 0;
-  height: 2px;
+  height: 2px; /* Fixed height for the underline */
   background-color: #0d6efd;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease; /* Smooth transition for underline width */
 }
+
 .nav-link-custom:hover {
-  transform: translateY(-3px);
-  color: #0d6efd !important;
+  transform: translateY(-1px); /* Move the text upwards smoothly */
+  color: #0d6efd !important; /* Change text color smoothly */
 }
+
 .nav-link-custom:hover::after {
-  width: 100%;
+  width: 100%; /* Expand the underline to full width */
 }
 
 /* ----------------------- Home Page Feature Section --------------------- */
@@ -1028,7 +1031,8 @@ p {
   padding: 4rem 0;
 }
 
-.stats-banner h2, .stats-banner p {
+.stats-banner h2,
+.stats-banner p {
   color: white;
 }
 /* =================================================================== */
@@ -1044,13 +1048,13 @@ p {
 
 /* Adds a dark overlay to make white text readable */
 .page-header-new::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4); 
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Ensures content is above the overlay */
@@ -1059,7 +1063,8 @@ p {
   z-index: 2;
 }
 
-.page-header-new h1, .page-header-new p {
+.page-header-new h1,
+.page-header-new p {
   color: white;
 }
 
