@@ -1,168 +1,148 @@
 import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { FaUserMd, FaStethoscope, FaHeartbeat, FaBrain, FaQuoteLeft } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../index.css";
+
+// Import your two images
+import supportPersonImage from "../assets/amisiam.jpg";
+import supportHeaderImage from "../assets/nice.jpg";
 
 const Support = () => {
   return (
-    <div className='support-page'>
-      <Container className='py-5'>
-        {/* Section: Introduction */}
-        <Row className='text-center mb-5'>
-          <Col>
-            <h1 className='display-4 font-weight-bold'>Support</h1>
-            <p className='lead'>
-              Need assistance? We’re here to help. Browse our FAQs or contact us for further support.
-            </p>
-          </Col>
-        </Row>
+    <div>
+      {/* New Header Section */}
+      <header
+        className='page-header-new text-center text-white'
+        style={{ backgroundImage: `url(${supportHeaderImage})` }}>
+        <Container>
+          <h1 className='display-4 fw-bold'>Professional Healthcare</h1>
+          <p className='lead col-lg-8 mx-auto'>
+            As the leading expert in everything concerning medical treatment I'm glad to offer you my help.
+          </p>
+          {/* <Button variant="primary" className="read-more-btn-teal-filled">
+            READ MORE
+          </Button> */}
+        </Container>
+      </header>
+      {/* "About Me" and other sections wrapper */}
+      <div className='support-page-new'>
+        <section className='about-me-section py-5'>
+          <Container>
+            <Row className='align-items-center'>
+              <Col lg={6} className='mb-4 mb-lg-0'>
+                <div className='about-me-card '>
+                  <div className='experience-badge'>18 years of experience</div>
+                  <FaQuoteLeft className='quote-icon' />
+                  <h2 className='fw-bold'>About Us</h2>
+                  <p className='lead'>
+                    Welcome to our hospital’s official website. We are committed to providing compassionate care,
+                    advanced medical services, and a safe environment for every patient. Our team of skilled doctors,
+                    nurses, and healthcare professionals work together to ensure the highest quality treatment and
+                    support. Through this website, you can learn about our services, facilities, and patient care
+                    programs designed to meet your health needs with trust and excellence.
+                  </p>
+                  <p className='text-muted'>
+                    Our hospital is dedicated to providing quality healthcare with compassion, trust, and modern medical
+                    services for every patient.
+                  </p>
+                  {/* <Button variant='outline-primary' className='read-more-btn-teal'>
+                    READ ABOUT US
+                  </Button> */}
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div className='support-image-container'>
+                  <img src={supportPersonImage} alt='Dr. Jane Wilson' className='img-fluid' />
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
 
-        {/* Section: FAQ */}
-        <Row className='text-center mb-5'>
-          <Col>
-            <h2 className='font-weight-bold mb-4'>Frequently Asked Questions</h2>
-          </Col>
-        </Row>
+        {/* "I Offer Services That Work" Section */}
+        <section className='services-section py-5'>
+          <Container>
+            <h2 className='text-center fw-bold mb-5 section-heading-dark'>We Offer Services That Work</h2>
+            <Row>
+              <Col md={6} lg={3} className='mb-4'>
+                <div className='card h-100 shadow-sm border-0 p-4 text-center feature-card d-flex flex-column justify-content-center align-items-center'>
+                  <FaUserMd className='service-icon  mb-3 ' />
+                  <h5 className='fw-bold mt-3'>Dietary Counseling</h5>
+                  <p className='text-muted'>
+                    Dietary Counseling service is available to people who have been diagnosed by a professional with a
+                    long-term health condition requiring dietary changes.
+                  </p>
+                  {/* <a href='#' className='read-more-link'>
+                    READ MORE
+                  </a> */}
+                </div>
+              </Col>
+              <Col md={6} lg={3} className='mb-4'>
+                <div className='card h-100 shadow-sm border-0 p-4 text-center feature-card d-flex flex-column justify-content-center align-items-center'>
+                  <FaStethoscope className='service-icon  mb-3' />
+                  <h5 className='fw-bold mt-3'>Health Education</h5>
+                  <p className='text-muted'>
+                    Health Education is a service providing my clients with a deeper and better understanding about how
+                    their body works, which can be useful for everyone.
+                  </p>
+                  {/* <a href='#' className='read-more-link'>
+                    READ MORE
+                  </a> */}
+                </div>
+              </Col>
+              <Col md={6} lg={3} className='mb-4'>
+                <div className='card h-100 shadow-sm border-0 p-4 text-center feature-card d-flex flex-column justify-content-center align-items-center'>
+                  <FaHeartbeat className='service-icon mb-3' />
+                  <h5 className='fw-bold mt-3'>Sports Medicine</h5>
+                  <p className='text-muted'>
+                    My services are not limited to families only. I also offer medical help to athletes. If you have an
+                    injury caused by playing sports, I will be glad to help you.
+                  </p>
+                </div>
+              </Col>
+              <Col md={6} lg={3} className='mb-4'>
+                <div className='card h-100 shadow-sm border-0 p-4 text-center feature-card d-flex flex-column justify-content-center align-items-center'>
+                  <FaBrain className='service-icon  mb-3' />
+                  <h5 className='fw-bold mt-3'>Stress Testing</h5>
+                  <p className='text-muted'>
+                    Stress Tests can provide useful information about the current state of your body and mind. So, they
+                    may get used as a diagnostic tool for your future treatment.
+                  </p>
+                  {/* <a href='#' className='read-more-link'>
+                    READ MORE
+                  </a> */}
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
 
-        <Row>
-          {/* FAQ 1 */}
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>How do I book an appointment?</Card.Title>
-                <Card.Text>
-                  To book an appointment, simply go to the "Find a Doctor" section, select your preferred doctor, and
-                  choose an available slot.
-                </Card.Text>
-                <Button variant='link' href='#faq-details'>
-                  Read More
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          {/* FAQ 2 */}
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>How do I access emergency services?</Card.Title>
-                <Card.Text>
-                  You can access emergency services directly from the homepage by clicking on the "Emergency Service"
-                  button for immediate assistance.
-                </Card.Text>
-                <Button variant='link' href='#faq-details'>
-                  Read More
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          {/* FAQ 3 */}
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>How secure is my health data?</Card.Title>
-                <Card.Text>
-                  Your health data is protected with enterprise-grade security, ensuring compliance with privacy
-                  regulations for the safety of your information.
-                </Card.Text>
-                <Button variant='link' href='#faq-details'>
-                  Read More
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          {/* FAQ 4 */}
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>How do I get in touch with support?</Card.Title>
-                <Card.Text>
-                  You can contact support through our live chat feature or by sending an email to support@hospitall.com.
-                </Card.Text>
-                <Button variant='link' href='#faq-details'>
-                  Read More
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        {/* Section: Contact Support */}
-        <Row className='text-center mb-5'>
-          <Col>
-            <h2 className='font-weight-bold mb-4'>Contact Support</h2>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>Live Chat</Card.Title>
-                <Card.Text>
-                  Have an urgent issue? Our support team is available 24/7 through live chat for instant assistance.
-                </Card.Text>
-                <Button variant='primary' href='#live-chat'>
-                  Start Live Chat
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>Email Support</Card.Title>
-                <Card.Text>
-                  You can email us at <strong>support@hospitall.com</strong> for general inquiries or technical issues.
-                </Card.Text>
-                <Button variant='primary' href='mailto:support@hospitall.com'>
-                  Send Email
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        {/* Section: Additional Resources */}
-        <Row className='text-center mb-5'>
-          <Col>
-            <h2 className='font-weight-bold mb-4'>Additional Resources</h2>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>Help Center</Card.Title>
-                <Card.Text>
-                  Explore our Help Center for in-depth guides, tutorials, and articles to assist you with using the
-                  platform.
-                </Card.Text>
-                <Button variant='link' href='#help-center'>
-                  Visit Help Center
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          <Col md={6} className='mb-4'>
-            <Card>
-              <Card.Body>
-                <Card.Title>Community Forum</Card.Title>
-                <Card.Text>
-                  Join our Community Forum to discuss issues, share tips, and get advice from fellow users.
-                </Card.Text>
-                <Button variant='link' href='#forum'>
-                  Visit Forum
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+        {/* Statistics Banner Section */}
+        <section className='stats-banner text-center text-white'>
+          <Container>
+            <Row>
+              <Col md={6} lg={3} className='mb-4 mb-lg-0'>
+                <h2 className='display-4 fw-bold'>19</h2>
+                <p className='lead'>Years of experience</p>
+              </Col>
+              <Col md={6} lg={3} className='mb-4 mb-lg-0'>
+                <h2 className='display-4 fw-bold'>236</h2>
+                <p className='lead'>Consultations</p>
+              </Col>
+              <Col md={6} lg={3} className='mb-4 mb-lg-0'>
+                <h2 className='display-4 fw-bold'>78</h2>
+                <p className='lead'>Monthly publications</p>
+              </Col>
+              <Col md={6} lg={3}>
+                <h2 className='display-4 fw-bold'>5469</h2>
+                <p className='lead'>Happy patients</p>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+      </div>{" "}
+      {/* ✅ THIS IS THE MISSING CLOSING TAG */}
     </div>
   );
 };
