@@ -1,23 +1,36 @@
-# HospitALL
+# Project Title
 
-## Group Members
+_Team Members:_
 
-- **Arany Hasan (20220204053)**  
-  Frontend - <a href="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/ead1d584-264e-4480-b1e6-6de2e8b10054"><img src="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/ead1d584-264e-4480-b1e6-6de2e8b10054.svg" alt="wakatime"></a>    
-  Backend - <a href="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/a24836bc-0d71-4837-9ff0-9349914d5b5a"><img src="https://wakatime.com/badge/user/2ad53666-4746-4971-a4a1-c07bf36819a7/project/a24836bc-0d71-4837-9ff0-9349914d5b5a.svg" alt="wakatime"></a>
+- Arany Hasan | arany.cse.20220204053@aust.edu
+- Likhon Saha | likhon.cse.20220204065@aust.edu
+- Mahir Faisal| mahir.cse.20220204073@aust.edu
+- Ahmed Nafis Siam | siam.cse.20220204075@aust.edu
 
-- **Likhon Saha (20220204065)**  
-  Frontend - <a href="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c"><img src="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/8f00d690-ece3-4959-8b8a-1f207db5882c.svg" alt="wakatime"></a>  
-  Backend - <a href="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/a4c2c928-ff44-4dc1-9879-aa308965ca34"><img src="https://wakatime.com/badge/user/22faad2d-1547-40c2-96b6-2eaf8210c681/project/a4c2c928-ff44-4dc1-9879-aa308965ca34.svg" alt="wakatime"></a>
+_Project Live Link:_ [Insert URL]
+_Recorded video:_ [\[Insert URL\] (Optional)](HospitALL_Video.zip)
 
-- **Mahir Faisal (20220204073)**  
-  Frontend - <a href="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/f8bb163d-67d8-450e-8771-7de51749413a"><img src="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/f8bb163d-67d8-450e-8771-7de51749413a.svg" alt="wakatime"></a>        
-  Backend - <a href="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/61cdb88c-c91b-46fa-8e6a-d77aec63baf0"><img src="https://wakatime.com/badge/user/f60b5d2c-a443-490a-8ce6-9166fa25024d/project/61cdb88c-c91b-46fa-8e6a-d77aec63baf0.svg" alt="wakatime"></a>  
-- **Ahmed Nafish Shiam (20220204075)**  
- Frontend -<a href="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/9b8bbb29-3a18-467c-b9f8-cb93e6cf3707"><img src="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/9b8bbb29-3a18-467c-b9f8-cb93e6cf3707.svg" alt="wakatime"></a>  
- Backend - <a href="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/a1f2a67e-daff-4565-94b2-886874d878c9"><img src="https://wakatime.com/badge/user/a3f2e5b5-e430-45fb-8379-5ef5728e6029/project/a1f2a67e-daff-4565-94b2-886874d878c9.svg" alt="wakatime"></a>
+---
 
-## Project Description
+## Table of Contents
+
+1. [Project Description](#1-project-description)
+2. [Workflow Overview](#2-workflow-overview)
+3. [Main Features](#3-main-features)
+4. [Technologies Used](#4-technologies-used)
+5. [System Architecture](#5-system-architecture)
+6. [Setup Guidelines](#6-setup-guidelines)
+   - [Backend](#backend)
+   - [Frontend](#frontend)
+7. [Running the Application](#7-running-the-application)
+8. [Deployment Status & Tests](#8-deployment-status--tests)
+9. [Contribution Table](#9-contribution-table)
+10. [Screenshots](#10-screenshots)
+11. [Limitations / Known Issues](#11-limitations--known-issues)
+
+---
+
+## 1. Project Description
 
 HospitALL is a smart and unified healthcare management platform.  
 It brings together patient information, doctor coordination, and emergency response.  
@@ -25,16 +38,19 @@ From appointments to real-time alerts, everything stays in sync.
 The system includes an AI-powered chatbot to assist patients with queries, guidance, and support.  
 HospitALL keeps hospitals connected, efficient, and always ready.
 
-## Target Audience
+---
 
-This platform serves as a comprehensive ecosystem connecting patients, healthcare providers, and administrators. It enables patients to access medical services, allows doctors to manage their professional profiles, empowers hospitals to oversee facilities and emergency services, and provides administrators with tools to efficiently manage the entire system. In essence, the project integrates all stakeholders within the healthcare landscape, from individuals seeking care to the institutions delivering it.
+## 2. Workflow Overview
 
-## Core Features (AI-Powered)
+-Patients can easily book appointments, access health records, and communicate with doctors via the platform.
+-Doctors can manage their professional profiles, patient consultations, and appointment schedules.
+-he platform features an AI-powered symptom checker, which assists users in identifying potential health issues based on the symptoms they describe.
+-Real-time alerts notify patients and doctors about appointment reminders.
+-Administrators have access to advanced tools for system oversight, ensuring smooth management of the entire platform.
 
-Our platform features an intelligent AI diagnostic engine designed to assist users in identifying potential health conditions. Users begin by submitting a detailed description of their symptoms through an Input Query. The AI analyzes this information and returns a comprehensive AI Response that includes a curated list of possible conditions.
-Beyond diagnostics, the system takes actionable next steps by generating a personalized, dynamic list of recommended doctors and diagnostic tests, helping users move seamlessly from symptom awareness to professional medical care
+---
 
-## Project Features
+## 3. Main Features
 
 - AI symptom checker gives disease recommendations
 - Find doctors by specialty and browse nearby hospital services.
@@ -43,16 +59,104 @@ Beyond diagnostics, the system takes actionable next steps by generating a perso
 - Request ambulance service from nearby hospitals for urgent situations.
 - Manage personal and professional profiles for patients and doctors.
 
-## Technology Stack
+---
 
-- **Backend:** Laravel (PHP Framework)
-- **Database:** phpMyAdmin (MySQL)
-- **Frontend:** React JS (JavaScript Library)
-- **Styling:** Tailwind CSS / Bootstrap
+## 4. Technologies Used
 
-## Mock UI Design
+- _Frontend:_ React JS (JavaScript Library)
+- _Backend:_ Laravel (PHP Framework)
+- _Database:_ phpMyAdmin (MySQL)
+- _Styling:_ Tailwind CSS / Bootstrap
+- _Other Tools:_ GitHub, ESLint/Prettier, PHPUnit/Pest, Vitest, Laravel Pint.
 
-We have designed the interface using Figma to visualize the layout and interaction flow of our
-application.
+---
 
-Figma Prototype - [HospitALL](https://www.figma.com/make/M6lQqJucpCSkw2tkQ8z2UF/HospitALL--Community-?node-id=0-1&p=f&fullscreen=1)
+## 5. System Architecture
+
+HospitALL follows a modular, API-first architecture with a clear separation of patient-facing frontend, doctor/admin interface, and backend API.
+
+Frontend: React SPA for patient portal, doctor dashboards, and hospital services interface.
+Backend: Laravel RESTful API, authentication via Sanctum.
+Database: MySQL with structured tables for patients, doctors, appointments.
+Scalability: Supports horizontal scaling with queue workers
+Security: Role-based permissions for patients, doctors, and admins, validation of input data, audit logging for medical records, and rate limiting to prevent abuse.
+
+---
+
+## 6. Setup Guidelines
+
+### Backend
+
+bash
+
+# Clone the repository
+
+git clone <https://github.com/HospitALL01>
+cd backend
+
+# Install dependencies
+
+npm install
+
+# Setup environment variables
+
+cp .env.example .env
+
+# Edit .env as needed
+
+# Run backend server
+
+php artisan serve
+
+### Frontend
+
+bash
+cd frontend
+
+# Install dependencies
+
+npm install
+
+# Setup environment variables
+
+cp .env.example .env
+
+# Edit .env as needed
+
+# Run frontend
+
+npm run dev
+
+---
+
+## 7. Running the Application
+
+- Start the _backend_ using Laravel (php artisan serve).
+- Start the _frontend_ using Vite (npm run dev).
+- Access the admin dashboard and storefront via provided localhost ports.
+- Alternatively, access the _deployed live link_ if available.
+
+## 8. Deployment Status & Tests
+
+| Component | Is Deployed? | Is Dockerized? | Unit Tests Added? (Optional) | Is AI feature implemented? (Optional) |
+| --------- | ------------ | -------------- | ---------------------------- | ------------------------------------- |
+| Backend   | No           | No             | No                           | Yes                                   |
+| Frontend  | No           | No             | No                           | Yes                                   |
+
+## 9. Contribution Table
+
+| Metric                        | Total | Backend | Frontend | Member 1 | Member 2 | Member 3 | Member 4 |
+| ----------------------------- | ----- | ------- | -------- | -------- | -------- | -------- | -------- |
+| Issues Solved                 | 12    | 0       | 12       | 3        | 3        | 3        | 3        |
+| WakaTime Contribution (Hours) | 108   | 41      | 70       | 27       | 3        | 57       | 23       |
+| Percent Contribution (%)      |       |         |          |          |          |          |          |
+
+## 10. Screenshots
+
+Include screenshots or GIFs of the deployed application.
+
+## 11. Limitations / Known Issues
+
+Some hospital management systems may require manual configuration for patient data syncing depending on the healthcare region.
+Appointment scheduling can occasionally experience delays if the server is under heavy load.
+Integration with third-party diagnostic tools is still being developed for improved data consistency and real-time results.
